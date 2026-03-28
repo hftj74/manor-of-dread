@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manor of Dread</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:monospace;background:#1a1208;color:#e8d5b0;padding:16px;min-height:100vh;max-width:600px;margin:0 auto;overflow-x:hidden}
@@ -35,14 +34,13 @@ body{font-family:monospace;background:#1a1208;color:#e8d5b0;padding:16px;min-hei
 .btn:hover{border-color:#EF9F27;color:#EF9F27}
 .btn-danger{border-color:#6a2018}.btn-danger:hover{border-color:#E24B4A;color:#E24B4A}
 .btn-green{border-color:#2a5020}.btn-purple{border-color:#4a3870}
-.btn-dog{border-color:#2060a0;color:#85B7EB}.btn-dog:hover{border-color:#85B7EB;color:#B5D4F4}
-.btn-dan{border-color:#1a7860;color:#5DCAA5}.btn-dan:hover{border-color:#5DCAA5}
-.btn-lily{border-color:#904060;color:#ED93B1}.btn-lily:hover{border-color:#ED93B1}
+.btn-dog{border-color:#2060a0;color:#85B7EB}.btn-dog:hover{border-color:#85B7EB}
+.btn-dan{border-color:#1a7860;color:#5DCAA5}.btn-lily{border-color:#904060;color:#ED93B1}
 .btn-prim{border-color:#a06020;color:#EF9F27;display:block;width:100%;padding:12px;margin-bottom:8px;font-size:14px;background:#2e1808}
 .log{background:#120e06;border-radius:6px;padding:8px 12px;max-height:80px;overflow-y:auto;margin-top:8px;border:1px solid #3a2810}
 .le{font-size:11px;line-height:1.6;color:#9a8060}
 .le-bad{color:#C04030}.le-good{color:#4a8030}.le-warn{color:#a07030}
-.le-dog{color:#4080C0}.le-dan{color:#20906a}.le-lily{color:#C04070}.le-cat{color:#ff69b4}
+.le-dog{color:#4080C0}.le-dan{color:#20906a}.le-lily{color:#C04070}
 .pw{background:#2a1e0a;border-radius:99px;height:7px;margin:6px 0}
 .pi{height:7px;border-radius:99px;background:#a06020}
 .er{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #2a1e08}
@@ -84,157 +82,119 @@ body{font-family:monospace;background:#1a1208;color:#e8d5b0;padding:16px;min-hei
 .castline{font-size:12px;text-align:center;margin-bottom:16px;line-height:2}
 .achiev-popup{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#100820;border:1px solid #604890;border-radius:8px;padding:12px 18px;font-size:12px;color:#CECBF6;z-index:800;max-width:280px;text-align:center;animation:popIn .3s ease;pointer-events:none}
 @keyframes popIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-/* ===== JUMPSCARE OVERLAY ===== */
-#jsOverlay{
-  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-  z-index:9000;background:rgba(0,0,0,0.92);
-  align-items:center;justify-content:center;flex-direction:column;
-  cursor:pointer;
-}
-#jsOverlay.active{display:flex;}
-.js-cat-emoji{font-size:100px;line-height:1;animation:catPop .12s ease infinite alternate;user-select:none}
-@keyframes catPop{from{transform:scale(1) rotate(-8deg)}to{transform:scale(1.2) rotate(8deg)}}
-.js-headline{font-size:28px;font-weight:bold;letter-spacing:.12em;margin-top:14px;animation:colorCycle .3s linear infinite}
-@keyframes colorCycle{0%{color:#fff}25%{color:#ff00ff}50%{color:#00ffff}75%{color:#ffff00}100%{color:#fff}}
-.js-sub{font-size:13px;color:#ccc;letter-spacing:.1em;margin-top:6px}
-.js-meme{font-size:12px;color:#aaa;margin-top:16px;max-width:260px;text-align:center;line-height:1.7;font-style:italic;white-space:pre-line}
-.js-tap{font-size:11px;color:#666;margin-top:20px;letter-spacing:.08em}
-
-/* ===== FLOATING CLOSET ===== */
-.closet{
-  position:fixed;font-size:52px;pointer-events:none;z-index:9100;
-  animation:floatCloset linear infinite;
-  user-select:none;filter:drop-shadow(0 0 12px #ff00ff);
-}
-@keyframes floatCloset{
-  0%  {transform:translate(0,0) rotate(-5deg)}
-  20% {transform:translate(30px,-40px) rotate(10deg)}
-  40% {transform:translate(-20px,-80px) rotate(-8deg)}
-  60% {transform:translate(40px,-120px) rotate(12deg)}
-  80% {transform:translate(-10px,-60px) rotate(-6deg)}
-  100%{transform:translate(0,-150px) rotate(5deg);opacity:0}
-}
+#js{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:#000;cursor:pointer;overflow:hidden}
+#js.on{display:block}
+#jsflash{position:absolute;top:0;left:0;width:100%;height:100%;background:#fff;opacity:0;z-index:1;pointer-events:none}
+#jsnoise{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;z-index:2;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:overlay}
+#jsface{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:4;width:min(90vw,480px);opacity:0;filter:contrast(2) brightness(1.3) saturate(0.2)}
+#jsface2{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:4;width:min(95vw,560px);opacity:0;filter:contrast(2.5) brightness(1.2) saturate(0)}
+#jsface3{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:4;width:min(80vw,380px);opacity:0;filter:contrast(3) brightness(1.5) saturate(0.3)}
+#jsword{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;font-size:clamp(40px,10vw,88px);font-weight:bold;color:#fff;letter-spacing:.06em;text-align:center;opacity:0;text-shadow:0 0 40px #f00,0 0 80px #f00;pointer-events:none;font-family:monospace;white-space:nowrap}
+#jsvig{position:absolute;top:0;left:0;width:100%;height:100%;z-index:6;background:radial-gradient(ellipse at center,transparent 20%,#000 80%);opacity:0;pointer-events:none}
+#jseye{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:7;width:100%;height:0;background:#000;pointer-events:none}
+#jstap{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:8;font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.1em;opacity:0;pointer-events:none;font-family:monospace}
+.drip{position:absolute;top:0;width:3px;background:linear-gradient(#8b0000,#4a0000,transparent);opacity:0;z-index:3;border-radius:0 0 4px 4px;pointer-events:none}
 </style>
 </head>
 <body>
 <div id="main"></div>
 <div id="apop"></div>
-
-<!-- JUMPSCARE OVERLAY -->
-<div id="jsOverlay">
-  <div class="js-cat-emoji" id="jsCat">😼</div>
-  <div class="js-headline" id="jsHead">MEWING</div>
-  <div class="js-sub" id="jsSub">SIGMA CAT HAS ENTERED</div>
-  <div class="js-meme" id="jsMeme"></div>
-  <div class="js-tap">tap anywhere to continue</div>
+<div id="js">
+  <div id="jsflash"></div>
+  <div id="jsnoise"></div>
+  <svg id="jsface" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="200" cy="220" rx="130" ry="160" fill="#1a0808"/>
+    <ellipse cx="143" cy="188" rx="40" ry="34" fill="#080000"/>
+    <ellipse cx="257" cy="188" rx="40" ry="34" fill="#080000"/>
+    <ellipse cx="143" cy="188" rx="22" ry="20" fill="#cc0000"/>
+    <ellipse cx="257" cy="188" rx="22" ry="20" fill="#cc0000"/>
+    <ellipse cx="143" cy="188" rx="10" ry="10" fill="#ff3333"/>
+    <ellipse cx="257" cy="188" rx="10" ry="10" fill="#ff3333"/>
+    <ellipse cx="140" cy="185" rx="4" ry="4" fill="#fff"/>
+    <ellipse cx="254" cy="185" rx="4" ry="4" fill="#fff"/>
+    <path d="M182 238 L200 268 L218 238Z" fill="#060000"/>
+    <path d="M118 308 Q200 405 282 308 Q200 286 118 308Z" fill="#060000"/>
+    <rect x="143" y="310" width="17" height="32" rx="3" fill="#d0d0d0"/>
+    <rect x="167" y="308" width="21" height="42" rx="3" fill="#e8e8e8"/>
+    <rect x="196" y="308" width="21" height="42" rx="3" fill="#e8e8e8"/>
+    <rect x="224" y="310" width="17" height="32" rx="3" fill="#d0d0d0"/>
+    <path d="M98 118 Q78 76 68 28" stroke="#100000" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M138 78 Q128 38 133 0" stroke="#100000" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M200 68 Q200 28 196 0" stroke="#100000" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M262 78 Q272 38 267 0" stroke="#100000" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M302 118 Q322 76 332 28" stroke="#100000" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <rect x="174" y="368" width="52" height="82" fill="#1a0808"/>
+    <path d="M76 500 Q88 458 100 436" stroke="#1e0e0e" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M54 500 Q70 452 86 428" stroke="#1e0e0e" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M324 500 Q312 458 300 436" stroke="#1e0e0e" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M346 500 Q330 452 314 428" stroke="#1e0e0e" stroke-width="11" fill="none" stroke-linecap="round"/>
+  </svg>
+  <svg id="jsface2" viewBox="0 0 620 380" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="310" cy="190" rx="250" ry="135" fill="#100606"/>
+    <ellipse cx="165" cy="162" rx="58" ry="48" fill="#040000"/>
+    <ellipse cx="455" cy="162" rx="58" ry="48" fill="#040000"/>
+    <ellipse cx="165" cy="162" rx="32" ry="30" fill="#cc0000"/>
+    <ellipse cx="455" cy="162" rx="32" ry="30" fill="#cc0000"/>
+    <ellipse cx="165" cy="162" rx="14" ry="14" fill="#ff4444"/>
+    <ellipse cx="455" cy="162" rx="14" ry="14" fill="#ff4444"/>
+    <ellipse cx="161" cy="158" rx="5" ry="5" fill="#fff"/>
+    <ellipse cx="451" cy="158" rx="5" ry="5" fill="#fff"/>
+    <path d="M95 262 Q310 368 525 262 Q310 238 95 262Z" fill="#040000"/>
+    <rect x="160" y="264" width="15" height="42" rx="3" fill="#ddd"/>
+    <rect x="183" y="262" width="19" height="52" rx="3" fill="#eee"/>
+    <rect x="210" y="262" width="19" height="52" rx="3" fill="#eee"/>
+    <rect x="372" y="262" width="19" height="52" rx="3" fill="#eee"/>
+    <rect x="399" y="262" width="19" height="52" rx="3" fill="#eee"/>
+    <rect x="425" y="264" width="15" height="42" rx="3" fill="#ddd"/>
+    <path d="M55 96 Q35 54 25 8" stroke="#080000" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M310 42 Q310 4 310 0" stroke="#080000" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M565 96 Q585 54 595 8" stroke="#080000" stroke-width="11" fill="none" stroke-linecap="round"/>
+  </svg>
+  <svg id="jsface3" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="110" cy="100" rx="78" ry="65" fill="#be0000" opacity=".95"/>
+    <ellipse cx="330" cy="100" rx="78" ry="65" fill="#be0000" opacity=".95"/>
+    <ellipse cx="110" cy="100" rx="40" ry="36" fill="#050000"/>
+    <ellipse cx="330" cy="100" rx="40" ry="36" fill="#050000"/>
+    <ellipse cx="110" cy="100" rx="16" ry="16" fill="#ff5555"/>
+    <ellipse cx="330" cy="100" rx="16" ry="16" fill="#ff5555"/>
+    <ellipse cx="105" cy="95" rx="5" ry="5" fill="#fff"/>
+    <ellipse cx="325" cy="95" rx="5" ry="5" fill="#fff"/>
+  </svg>
+  <div id="jsword"></div>
+  <div id="jsvig"></div>
+  <div id="jseye"></div>
+  <div id="jstap">tap to continue</div>
 </div>
-
 <script>
-/* ===== MEWING SCARES DATA ===== */
-var SCARES = [
-  {
-    cat:"😼", head:"MEWING UNLOCKED",
-    sub:"SIGMA CAT DETECTED IN MANOR",
-    meme:"bro thought the manor was scary...\nsigma cat said 'L + ratio + no cap' 💀",
-    fright:20, closets:3
-  },
-  {
-    cat:"😹", head:"HAWK TUAH CAT",
-    sub:"SPIT ON THAT THANG FR FR",
-    meme:"the monster ran. the hawk tuah cat stayed.\nyou are not the main character.",
-    fright:15, closets:4
-  },
-  {
-    cat:"🙀", head:"GYATT",
-    sub:"CAT SAID GYATT AND LEFT",
-    meme:"rizz level: haunted manor sigma cat\nyour rizz level: walked into a chandelier",
-    fright:18, closets:3
-  },
-  {
-    cat:"😸", head:"NO CAP FR FR",
-    sub:"THIS CAT IS BUILT DIFFERENT",
-    meme:"on god the cat is more alpha than the monster\nyou are cooked bro 💯",
-    fright:12, closets:5
-  },
-  {
-    cat:"😾", head:"RATIO + L",
-    sub:"CAT RATIO'D THE DARKNESS",
-    meme:"the shadows: scary\nthe mewing cat:\nratio + L + you fell off + no rizz + fr fr",
-    fright:22, closets:6
-  },
-  {
-    cat:"🐱", head:"SKIBIDI",
-    sub:"SKIBIDI MANOR CAT",
-    meme:"skibidi toilet? weak.\nskibidi manor cat? you are not ready.",
-    fright:16, closets:3
-  },
-  {
-    cat:"😿", head:"CAUGHT IN 4K",
-    sub:"CAT SAW YOUR WHOLE GAMEPLAY",
-    meme:"the cat watched you run from the monster and said:\n'bro really said run lmaooo' 💀",
-    fright:14, closets:4
-  },
+var jsOn=false,jsTimers=[],jsCb=null;
+var SCARES=[
+  {face:"jsface",word:"IT SEES YOU",flash:"#ffffff",dur:2600},
+  {face:"jsface2",word:"RUN",flash:"#ff0000",dur:2200},
+  {face:"jsface3",word:"BEHIND YOU",flash:"#ff0000",dur:2000},
 ];
-
-var jsActive = false;
-var jsTimer = null;
-var jsCallback = null;
-var mewCount = 0;
-
-function spawnClosets(count) {
-  for(var i = 0; i < count; i++) {
-    (function(idx) {
-      setTimeout(function() {
-        var c = document.createElement("div");
-        c.className = "closet";
-        c.textContent = "🚪";
-        var startX = 20 + Math.random() * 60; // % across screen
-        var dur = 1.2 + Math.random() * 0.8;
-        c.style.left = startX + "%";
-        c.style.bottom = "10%";
-        c.style.animationDuration = dur + "s";
-        c.style.animationDelay = "0s";
-        document.body.appendChild(c);
-        setTimeout(function() { c.remove(); }, dur * 1000 + 100);
-      }, idx * 180);
-    })(i);
-  }
+function ct(){jsTimers.forEach(clearTimeout);jsTimers=[];}
+function tt(fn,ms){jsTimers.push(setTimeout(fn,ms));}
+function shakeLoop(){if(!jsOn)return;var el=document.getElementById("js");var x=(Math.random()-.5)*28,y=(Math.random()-.5)*28,r=(Math.random()-.5)*7;el.style.transform="translate("+x+"px,"+y+"px) rotate("+r+"deg)";tt(shakeLoop,55);}
+function spawnDrips(){var c=document.getElementById("js");for(var i=0;i<14;i++){(function(idx){tt(function(){var d=document.createElement("div");d.className="drip";d.style.left=(4+Math.random()*92)+"%";d.style.height=(50+Math.random()*220)+"px";d.style.width=(1.5+Math.random()*4)+"px";c.appendChild(d);var op=0,iv=setInterval(function(){op+=0.07;d.style.opacity=Math.min(op,0.8);if(op>=0.8)clearInterval(iv);},25);},idx*100);})(i);}}
+function triggerScare(callback){
+  if(jsOn){if(callback)callback();return;}
+  var s=SCARES[Math.floor(Math.random()*SCARES.length)];
+  jsOn=true;jsCb=callback||null;
+  var js=document.getElementById("js"),flash=document.getElementById("jsflash"),noise=document.getElementById("jsnoise"),word=document.getElementById("jsword"),vig=document.getElementById("jsvig"),tap=document.getElementById("jstap"),eye=document.getElementById("jseye");
+  ["jsface","jsface2","jsface3"].forEach(function(id){var f=document.getElementById(id);f.style.display="none";f.style.opacity="0";f.style.transform="translate(-50%,-50%) scale(0)";});
+  var face=document.getElementById(s.face);face.style.display="block";
+  word.textContent=s.word;word.style.opacity="0";flash.style.opacity="0";vig.style.opacity="0";tap.style.opacity="0";noise.style.opacity="0";eye.style.height="0";js.style.transform="none";js.classList.add("on");
+  tt(function(){flash.style.background=s.flash;flash.style.transition="opacity 0.04s";flash.style.opacity="1";},0);
+  tt(function(){flash.style.transition="opacity 0.12s";flash.style.opacity="0";face.style.transition="transform 0.07s cubic-bezier(0.1,2,0.3,1), opacity 0.07s";face.style.transform="translate(-50%,-50%) scale(1.12)";face.style.opacity="1";noise.style.transition="opacity 0.1s";noise.style.opacity="0.35";shakeLoop();spawnDrips();},55);
+  tt(function(){face.style.transition="transform 0.18s ease-out";face.style.transform="translate(-50%,-50%) scale(1)";word.style.transition="opacity 0.08s";word.style.opacity="1";vig.style.transition="opacity 0.25s";vig.style.opacity="1";},180);
+  tt(function(){flash.style.background="#ff0000";flash.style.transition="opacity 0.04s";flash.style.opacity="0.5";tt(function(){flash.style.transition="opacity 0.1s";flash.style.opacity="0";},70);},650);
+  tt(function(){face.style.transition="transform 0.05s";face.style.transform="translate(-50%,-50%) scale(1.1)";tt(function(){face.style.transition="transform 0.12s ease-out";face.style.transform="translate(-50%,-50%) scale(1)";},80);},950);
+  tt(function(){tap.style.transition="opacity 1.2s";tap.style.opacity="1";},1400);
+  tt(function(){dismissScare();},s.dur);
 }
+function dismissScare(){if(!jsOn)return;jsOn=false;ct();document.getElementById("js").style.transform="none";var eye=document.getElementById("jseye");eye.style.transition="height 0.28s ease-in";eye.style.height="100%";setTimeout(function(){document.getElementById("js").classList.remove("on");eye.style.transition="none";eye.style.height="0";var drips=document.getElementById("js").querySelectorAll(".drip");drips.forEach(function(d){d.remove();});document.getElementById("jsnoise").style.opacity="0";document.getElementById("jsvig").style.opacity="0";if(jsCb){var cb=jsCb;jsCb=null;cb();}},300);}
+document.getElementById("js").addEventListener("click",dismissScare);
 
-function triggerScare(callback) {
-  if(jsActive) { if(callback) callback(); return; }
-  var s = SCARES[Math.floor(Math.random() * SCARES.length)];
-  jsActive = true;
-  jsCallback = callback || null;
-  mewCount++;
-  if(SAVE) { SAVE.mewCount = (SAVE.mewCount||0)+1; save(); }
-
-  document.getElementById("jsCat").textContent = s.cat;
-  document.getElementById("jsHead").textContent = s.head;
-  document.getElementById("jsSub").textContent = s.sub;
-  document.getElementById("jsMeme").textContent = s.meme;
-  document.getElementById("jsOverlay").classList.add("active");
-
-  spawnClosets(s.closets);
-
-  if(jsTimer) clearTimeout(jsTimer);
-  jsTimer = setTimeout(dismissScare, 2200);
-
-  return s.fright;
-}
-
-function dismissScare() {
-  if(!jsActive) return;
-  if(jsTimer) clearTimeout(jsTimer);
-  jsActive = false;
-  document.getElementById("jsOverlay").classList.remove("active");
-  if(jsCallback) { var cb = jsCallback; jsCallback = null; cb(); }
-}
-
-document.getElementById("jsOverlay").addEventListener("click", dismissScare);
-
-/* ===== GAME DATA ===== */
 var CATS_DATA=[
   {id:"victory",l:"Victory",c:"#70b030",bg:"#0e2008",b:"#2a5018"},
   {id:"escape",l:"Escape",c:"#EF9F27",bg:"#221808",b:"#a06020"},
@@ -246,18 +206,16 @@ var CATS_DATA=[
   {id:"dog",l:"Good Boys",c:"#85B7EB",bg:"#081828",b:"#2060a0"},
   {id:"dan",l:"Dan",c:"#5DCAA5",bg:"#062018",b:"#1a7860"},
   {id:"lily",l:"Lily",c:"#ED93B1",bg:"#200818",b:"#904060"},
-  {id:"sigma",l:"Sigma Cat",c:"#ff69b4",bg:"#1a0018",b:"#8b0057"},
 ];
-
 var ACHIEVEMENTS=[
-  {id:"a_first_dog",l:"Who's a Good Boy",desc:"Find your first dog in the manor",icon:"~",secret:false},
-  {id:"a_the_pack",l:"The Pack is Complete",desc:"Find both Noel and Rudy in the same run",icon:"W",secret:false},
-  {id:"a_dogs_fight",l:"Tag Team Terror",desc:"Watch Noel and Rudy fight the monster together",icon:"!",secret:false},
-  {id:"a_noel_rudy_bond",l:"Best Friends Forever",desc:"Have Noel and Rudy for 10 or more moves",icon:"*",secret:true},
+  {id:"a_first_dog",l:"Who's a Good Boy",desc:"Find your first dog",icon:"~",secret:false},
+  {id:"a_the_pack",l:"The Pack is Complete",desc:"Find both Noel and Rudy",icon:"W",secret:false},
+  {id:"a_dogs_fight",l:"Tag Team Terror",desc:"Watch Noel and Rudy fight together",icon:"!",secret:false},
+  {id:"a_noel_rudy_bond",l:"Best Friends Forever",desc:"Have both dogs for 10+ moves",icon:"*",secret:true},
   {id:"a_dog_survivor",l:"No Dog Left Behind",desc:"Escape with both dogs and full HP",icon:"S",secret:true},
-  {id:"a_found_dan",l:"Not Alone",desc:"Find Dan somewhere in the manor",icon:"D",secret:false},
-  {id:"a_found_lily",l:"Survivor Instinct",desc:"Find Lily somewhere in the manor",icon:"L",secret:false},
-  {id:"a_found_all",l:"Reunion",desc:"Find Dan, Lily, Noel and Rudy in one run",icon:"R",secret:true},
+  {id:"a_found_dan",l:"Not Alone",desc:"Find Dan in the manor",icon:"D",secret:false},
+  {id:"a_found_lily",l:"Survivor Instinct",desc:"Find Lily in the manor",icon:"L",secret:false},
+  {id:"a_found_all",l:"Reunion",desc:"Find all four survivors and dogs in one run",icon:"R",secret:true},
   {id:"a_first_win",l:"Monster Slayer",desc:"Defeat the boss for the first time",icon:"*",secret:false},
   {id:"a_survived_low",l:"One Foot in the Grave",desc:"Win with under 5% HP",icon:".",secret:false},
   {id:"a_sanity_steel",l:"Nerves of Steel",desc:"Win with 100% sanity",icon:"=",secret:true},
@@ -265,19 +223,17 @@ var ACHIEVEMENTS=[
   {id:"a_all_dog_endings",l:"Dog Person",desc:"Unlock all 5 dog endings",icon:"d",secret:false},
   {id:"a_all_dan_endings",l:"Dan's Story",desc:"Unlock all Dan endings",icon:"D",secret:true},
   {id:"a_all_lily_endings",l:"Lily's Story",desc:"Unlock all Lily endings",icon:"L",secret:true},
-  {id:"a_mewed",l:"Sigma Moment",desc:"Get jumpscared by the mewing cat",icon:"😼",secret:false},
-  {id:"a_mewed5",l:"Mewing Grindset",desc:"Get jumpscared by the cat 5 times total",icon:"😹",secret:true},
-  {id:"a_closet",l:"The Closet Follows",desc:"Watch a closet float during a jumpscare",icon:"🚪",secret:false},
+  {id:"a_jumpscared",l:"Something in the Dark",desc:"Survive a jumpscare",icon:"!",secret:false},
+  {id:"a_jumpscared5",l:"The Manor Remembers",desc:"Survive 5 jumpscares",icon:"X",secret:true},
 ];
-
 var CORE=[
   {id:"slay_beast",l:"Beast Slayer",cat:"victory",i:"*",cond:"Defeat the Cellar Beast with the torch",desc:"You thrust the torch into its chest. Fire takes it. The beast collapses into ash and silence."},
   {id:"slay_wraith",l:"Wraith Banisher",cat:"victory",i:"t",cond:"Defeat the Attic Wraith with the crucifix",desc:"The crucifix burns bright. The wraith contorts and dissolves into cold mist."},
   {id:"flee",l:"The Coward's Path",cat:"escape",i:"~",cond:"Escape through the back door alone",desc:"You bolt into the cold night. The monster still walks the halls. You survived but at what cost?"},
-  {id:"rope_escape",l:"Window Jumper",cat:"escape",i:"^",cond:"Use the rope to find the hidden window",desc:"You tie the rope to a beam and drop from the window. Your feet hit the ground. The manor cannot follow."},
+  {id:"rope_escape",l:"Window Jumper",cat:"escape",i:"^",cond:"Use the rope to find the hidden window",desc:"You tie the rope to a beam and drop from the window. Your feet hit the ground."},
   {id:"insanity",l:"Lost Mind",cat:"madness",i:"?",cond:"Let your sanity reach zero",desc:"The darkness was inside you all along. Your mind shatters. You wander the halls forever."},
   {id:"poison",l:"Bitter Medicine",cat:"death",i:"!",cond:"Drink the vial and receive poison",desc:"The vial was poison. Your vision blurs. You sink to the floor."},
-  {id:"death_hp",l:"Taken",cat:"death",i:"X",cond:"Die from a monster attack or hazard",desc:"The manor has claimed another soul. The house settles. Somewhere a portrait is hung."},
+  {id:"death_hp",l:"Taken",cat:"death",i:"X",cond:"Die from a monster attack",desc:"The manor has claimed another soul. The house settles. Somewhere a portrait is hung."},
   {id:"salt_boss",l:"The Ritual Seal",cat:"secret",i:"o",cond:"Pour salt in the boss room",desc:"You pour the salt in a wide circle. The creature recoils. Something has been contained for now."},
   {id:"both_items",l:"Prepared",cat:"secret",i:"+",cond:"Carry both torch and crucifix into battle",desc:"You were ready for anything. The monster never stood a chance."},
   {id:"full_hp",l:"Untouched",cat:"secret",i:"8",cond:"Win with 100% HP remaining",desc:"The manor never laid a hand on you. Impossible yet here you are."},
@@ -285,567 +241,83 @@ var CORE=[
   {id:"full_sanity",l:"Unbroken",cat:"secret",i:"=",cond:"Win with 100% sanity remaining",desc:"The manor tried to break your mind. It failed completely."},
   {id:"collector",l:"The Collector",cat:"secret",i:"#",cond:"Carry 8 or more items in one run",desc:"Every item in the manor all at once. You left nothing behind."},
   {id:"speed_run",l:"In and Out",cat:"secret",i:">",cond:"Win in under 15 moves",desc:"You solved it fast and walked away."},
-  {id:"explorer",l:"Every Room",cat:"neutral",i:"@",cond:"Visit all 17 rooms before winning",desc:"You mapped every corner of this cursed place before you ended it."},
+  {id:"explorer",l:"Every Room",cat:"neutral",i:"@",cond:"Visit all 17 rooms before winning",desc:"You mapped every corner of this cursed place."},
   {id:"lantern_win",l:"Light in Dark",cat:"victory",i:"l",cond:"Win while carrying the lantern",desc:"The lantern kept the worst of the dark at bay."},
   {id:"journal_win",l:"The Archivist",cat:"victory",i:"j",cond:"Win while carrying the journal",desc:"You read the manor's history. It told you exactly how to end things."},
   {id:"amulet_used",l:"Last Resort",cat:"cursed",i:"a",cond:"Let the amulet absorb a fatal blow",desc:"Death came for you. The amulet shattered. That was its entire purpose."},
   {id:"no_items",l:"Empty Hands",cat:"death",i:"x",cond:"Fight the boss with zero items",desc:"Bare hands against a monster. Brave and foolish. The same thing in the end."},
   {id:"speed_cellar",l:"Straight Down",cat:"secret",i:"v",cond:"Reach the cellar in 5 moves or fewer",desc:"You went straight for the basement. No detours. No fear."},
   {id:"knife_only",l:"Steel Nerve",cat:"cursed",i:"k",cond:"Carry only the knife when fighting the boss",desc:"You brought a knife to a monster fight. The sheer audacity carried you through."},
-  {id:"sigma_scare",l:"Sigma Jumpscare",cat:"sigma",i:"😼",cond:"Survive a mewing cat jumpscare",desc:"You were minding your own business in the haunted manor when a sigma cat appeared from the void and absolutely ratioed your sanity. No cap. Built different. The closet floated."},
-  {id:"noel_rescue",l:"Noel to the Rescue",cat:"dog",i:"N",cond:"Bring Noel to the boss room and send him in",desc:"Noel bursts from under the nursery cot tail thrashing utterly unafraid. He charges the monster with a bark that shakes the rafters. You both make it out. Noel trots ahead into the moonlight like he owns the night which he does."},
-  {id:"rudy_guardian",l:"Rudy Holds the Line",cat:"dog",i:"R",cond:"Bring Rudy to the boss room and send him in",desc:"Rudy materialises from the cellar dark growling low and steady. He plants himself between you and the beast. He comes bounding up three minutes later no worse for wear tail going like a helicopter."},
-  {id:"both_dogs",l:"The Pack",cat:"secret",i:"W",cond:"Have both dogs and win or escape together",desc:"Noel and Rudy find each other before you do. A golden retriever and a scruffy terrier wrestling in the hallway. Together they face down the monster while you escape. They catch up. Of course they do."},
-  {id:"monster_pet",l:"He Just Needed a Friend",cat:"secret",i:"&",cond:"Bring both dogs to the boss with zero weapons",desc:"You arrive weaponless flanked by Noel and Rudy. The monster looms then stops. Noel wags. Rudy offers a paw. Something ancient and terrible makes a low rumbling whimper. The three of them curl up together. You tiptoe out profoundly moved."},
-  {id:"dogs_teamwork",l:"The Dynamic Duo",cat:"dog",i:"@",cond:"Send both Noel and Rudy to fight together",desc:"Noel hits high Rudy hits low. The monster does not know which way to turn. Two good boys trot back tails wagging completely unbothered."},
-  {id:"dan_escape",l:"Dan Makes It",cat:"dan",i:"D",cond:"Find Dan and escape through the back door",desc:"Dan was hiding behind the study bookshelf shaking but alive. You grab his arm and run. Dan laughs a strange relieved slightly unhinged laugh. You understand completely."},
-  {id:"dan_fight",l:"Dan's Got Your Back",cat:"dan",i:"d",cond:"Find Dan and defeat the boss together",desc:"Dan is not a fighter. He is a librarian actually. But when the monster lunges he throws every book he grabbed while you finish it. I have always been more of a read about it guy he says."},
-  {id:"dan_secret",l:"Dan Knew All Along",cat:"secret",i:"ds",cond:"Show Dan the journal while he is in your party",desc:"Dan looks at the journal and goes very quiet. I wrote that he says. I was the one who started the ritual. He helps you end it. Whether that makes him a villain or a hero is something you think about for a long time afterward."},
-  {id:"lily_escape",l:"Lily Leads the Way",cat:"lily",i:"L",cond:"Find Lily and escape through the back door",desc:"Lily had already mapped three exits before you found her. She grabs your wrist and moves fast no hesitation no panic. I have watched a lot of horror movies she says. I knew not to split up."},
-  {id:"lily_fight",l:"Lily's Finishing Move",cat:"lily",i:"l",cond:"Find Lily and defeat the boss with the crucifix",desc:"Lily finds the crucifix before you do and has been waiting for someone brave enough. Together you corner the wraith. Lily does most of the work. That counts."},
-  {id:"lily_secret",l:"Lily Was Never Lost",cat:"secret",i:"ls",cond:"Hold the lantern to Lily's face in the ballroom",desc:"The lantern light catches Lily's face and she smiles not with relief but with recognition. I have been here before she says quietly. I come back every year. She helps you escape then slips back into the darkness before you can ask again."},
+  {id:"noel_rescue",l:"Noel to the Rescue",cat:"dog",i:"N",cond:"Bring Noel to the boss and send him in",desc:"Noel bursts from under the cot tail thrashing utterly unafraid. He charges the monster with a bark that shakes the rafters. You both make it out. He trots ahead like he owns the night which he does."},
+  {id:"rudy_guardian",l:"Rudy Holds the Line",cat:"dog",i:"R",cond:"Bring Rudy to the boss and send him in",desc:"Rudy materialises from the cellar dark growling low and steady. He plants himself between you and the beast. He comes bounding back three minutes later no worse for wear."},
+  {id:"both_dogs",l:"The Pack",cat:"secret",i:"W",cond:"Have both dogs and win or escape",desc:"Noel and Rudy find each other before you do. They face down the monster while you escape. They catch up. Of course they do."},
+  {id:"monster_pet",l:"He Just Needed a Friend",cat:"secret",i:"&",cond:"Bring both dogs to the boss with zero weapons",desc:"You arrive weaponless flanked by Noel and Rudy. The monster looms then stops. Noel wags. Rudy offers a paw. Something ancient makes a low rumbling whimper. You tiptoe out profoundly moved."},
+  {id:"dogs_teamwork",l:"The Dynamic Duo",cat:"dog",i:"@",cond:"Send both Noel and Rudy to fight together",desc:"Noel hits high Rudy hits low. Two good boys trot back tails wagging completely unbothered."},
+  {id:"dan_escape",l:"Dan Makes It",cat:"dan",i:"D",cond:"Find Dan and escape through the back door",desc:"Dan was hiding behind the bookshelf shaking but alive. You grab his arm and run. Dan laughs a strange relieved unhinged laugh. You understand completely."},
+  {id:"dan_fight",l:"Dan's Got Your Back",cat:"dan",i:"d",cond:"Find Dan and defeat the boss together",desc:"Dan is a librarian actually. But when the monster lunges he throws every book he grabbed while you finish it. I have always been more of a read about it guy he says."},
+  {id:"dan_secret",l:"Dan Knew All Along",cat:"secret",i:"ds",cond:"Show Dan the journal while he is with you",desc:"Dan looks at the journal and goes very quiet. I wrote that he says. I was the one who started the ritual. He helps you end it. Whether that makes him a villain or a hero you think about for a long time."},
+  {id:"lily_escape",l:"Lily Leads the Way",cat:"lily",i:"L",cond:"Find Lily and escape through the back door",desc:"Lily had already mapped three exits before you found her. She grabs your wrist and moves fast. You are outside in under two minutes. I knew not to split up she says."},
+  {id:"lily_fight",l:"Lily's Finishing Move",cat:"lily",i:"l",cond:"Find Lily and defeat the boss with the crucifix",desc:"Lily holds the wraith in place with the crucifix while you help. Honestly Lily does most of the work. That counts."},
+  {id:"lily_secret",l:"Lily Was Never Lost",cat:"secret",i:"ls",cond:"Hold the lantern to Lily's face in the ballroom",desc:"The lantern light catches Lily's face and she smiles not with relief but with recognition. I have been here before she says quietly. She slips back into the darkness before you can ask again."},
 ];
-
-var SKIP_IDS={"noel_rescue":1,"rudy_guardian":1,"monster_pet":1,"both_dogs":1,"dogs_teamwork":1,"dan_escape":1,"dan_fight":1,"dan_secret":1,"lily_escape":1,"lily_fight":1,"lily_secret":1,"insanity":1,"poison":1,"death_hp":1,"salt_boss":1,"no_items":1,"flee":1,"rope_escape":1,"amulet_used":1,"sigma_scare":1};
-
-var SAVE={unlocked:{},runs:0,gen:null,achievements:{},mewCount:0};
-try{var _s=localStorage.getItem("manor_v9");if(_s)SAVE=JSON.parse(_s);}catch(e){}
-function save(){try{localStorage.setItem("manor_v9",JSON.stringify(SAVE));}catch(e){}}
-
-var ALL=CORE.slice();
-var ready=false,genRunning=false,screen="menu",jf="all",G={};
-
-function showAchievement(id){
-  var a=null;
-  for(var i=0;i<ACHIEVEMENTS.length;i++){if(ACHIEVEMENTS[i].id===id){a=ACHIEVEMENTS[i];break;}}
-  if(!a||SAVE.achievements[id])return;
-  SAVE.achievements[id]=1;save();
-  var el=document.getElementById("apop");
-  var div=document.createElement("div");
-  div.className="achiev-popup";
-  div.innerHTML='<div style="font-size:10px;color:#9a8060;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">achievement unlocked</div><div style="font-size:14px;font-weight:bold;color:#AFA9EC;margin-bottom:2px">'+a.l+'</div><div style="font-size:11px;color:#9a8060">'+a.desc+'</div>';
-  el.appendChild(div);
-  setTimeout(function(){div.style.opacity="0";div.style.transition="opacity .5s";setTimeout(function(){div.remove();},500);},3000);
-}
-
-function checkAchievements(){
-  if(!G.dogs||!G.people)return;
-  if(G.dogs.length>=1)showAchievement("a_first_dog");
-  if(G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0)showAchievement("a_the_pack");
-  if(G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0&&G.moves>=10)showAchievement("a_noel_rudy_bond");
-  if(G.people.indexOf("dan")>=0)showAchievement("a_found_dan");
-  if(G.people.indexOf("lily")>=0)showAchievement("a_found_lily");
-  if(G.people.indexOf("dan")>=0&&G.people.indexOf("lily")>=0&&G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0)showAchievement("a_found_all");
-  if((SAVE.runs||0)>=100)showAchievement("a_100runs");
-  var dogE=["noel_rescue","rudy_guardian","both_dogs","monster_pet","dogs_teamwork"];
-  var allDog=true;for(var i=0;i<dogE.length;i++){if(!SAVE.unlocked[dogE[i]]){allDog=false;break;}}
-  if(allDog)showAchievement("a_all_dog_endings");
-  var danE=["dan_escape","dan_fight","dan_secret"];
-  var allDan=true;for(var i=0;i<danE.length;i++){if(!SAVE.unlocked[danE[i]]){allDan=false;break;}}
-  if(allDan)showAchievement("a_all_dan_endings");
-  var lilE=["lily_escape","lily_fight","lily_secret"];
-  var allLil=true;for(var i=0;i<lilE.length;i++){if(!SAVE.unlocked[lilE[i]]){allLil=false;break;}}
-  if(allLil)showAchievement("a_all_lily_endings");
-  if((SAVE.mewCount||0)>=1){showAchievement("a_mewed");showAchievement("a_closet");}
-  if((SAVE.mewCount||0)>=5)showAchievement("a_mewed5");
-}
-
-async function genEndings(){
-  if(genRunning)return;
-  if(SAVE.gen&&SAVE.gen.length>0){
-    var ids={};for(var i=0;i<CORE.length;i++){ids[CORE[i].id]=1;}
-    ALL=CORE.slice();
-    for(var i=0;i<SAVE.gen.length;i++){if(!ids[SAVE.gen[i].id])ALL.push(SAVE.gen[i]);}
-    ready=true;if(screen==="menu")render();return;
-  }
-  genRunning=true;
-  var taken=[];for(var i=0;i<CORE.length;i++){taken.push(CORE[i].id);}
-  try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:7000,messages:[{role:"user",content:"Design 67 more endings for horror game Manor of Dread. Players explore a manor collect items (torch lantern crucifix knife iron_key journal salt amulet vial rope) manage HP and sanity fight The Cellar Beast (weak: torch) or Attic Wraith (weak: crucifix/salt). Characters: dogs Noel (nursery) and Rudy (cellar) survivors Dan (study) and Lily (ballroom). Also there is a Sigma Cat that randomly jumpscares the player with mewing memes and floating closets. IDs already used: "+taken.join(",")+". Make exactly 67 endings as a valid JSON array. Each object must have: id (unique snake_case) l (name 2-4 words) cat (victory/escape/death/madness/secret/cursed/neutral) i (single ASCII char) cond (under 12 words) desc (1-2 atmospheric sentences). Vary categories. Return ONLY the raw JSON array nothing else."}]})
-    });
-    var data=await res.json();
-    var txt="";for(var i=0;i<data.content.length;i++){if(data.content[i].type==="text")txt+=data.content[i].text;}
-    var match=txt.match(/\[[\s\S]*\]/);
-    if(match){
-      var parsed=JSON.parse(match[0]);
-      var ids={};for(var i=0;i<CORE.length;i++){ids[CORE[i].id]=1;}
-      SAVE.gen=[];
-      for(var i=0;i<parsed.length;i++){
-        if(parsed[i].id&&parsed[i].l&&parsed[i].cat&&parsed[i].desc&&!ids[parsed[i].id]){
-          SAVE.gen.push(parsed[i]);if(SAVE.gen.length>=67)break;
-        }
-      }
-      ALL=CORE.slice();for(var i=0;i<SAVE.gen.length;i++){ALL.push(SAVE.gen[i]);}
-      save();
-    }
-    ready=true;
-  }catch(e){ready=true;}
-  genRunning=false;
-  if(screen==="menu")render();
-}
-
-var ROOMS=[
-  {id:"foyer",n:"Grand foyer",ic:"[F]",safe:1,desc:"The entrance hall. A cracked mirror reflects something that is not you. Three archways stretch into darkness.",ev:[],ex:["hallway","parlor","cellar_stair"]},
-  {id:"hallway",n:"East hallway",ic:"[H]",desc:"A long corridor. Portraits watch you. Sconces flicker and die.",ev:["portraits_move","floor_creak"],ex:["library","kitchen","nursery","foyer"]},
-  {id:"parlor",n:"Parlor",ic:"[P]",desc:"Red velvet chairs around a cold fireplace. A chess set mid-game. Someone was just here.",ev:["chess_move","cold_breath"],ex:["foyer","study","dining_room"]},
-  {id:"library",n:"Library",ic:"[L]",desc:"Towering bookshelves in shadow. A ladder knocked over. One book open on the floor.",ev:["book_open","shelf_fall"],ex:["hallway","secret_passage","study"]},
-  {id:"study",n:"Study",ic:"[S]",desc:"A locked desk. Maps on the wall. A man crouches behind the bookshelf wide-eyed.",ev:["desk_locked","map_clue"],ex:["library","parlor","attic_stair"],person:"dan"},
-  {id:"kitchen",n:"Kitchen",ic:"[K]",desc:"The smell of decay. Pots boil on a cold stove with nothing in them.",ev:["boiling_pots","scratching"],ex:["hallway","larder","cellar_stair"]},
-  {id:"larder",n:"Larder",ic:"[Ld]",desc:"Rotting preserves. Whatever was locked inside broke the lock from within.",ev:["jar_break","thing_inside"],ex:["kitchen"]},
-  {id:"dining_room",n:"Dining room",ic:"[D]",desc:"A table set for twelve. Food still steaming. Chairs scraped back mid-meal.",ev:["chairs_scrape","candles"],ex:["parlor","ballroom","cellar_stair"]},
-  {id:"ballroom",n:"Ballroom",ic:"[B]",desc:"An enormous dark room. A waltz plays from nowhere. A young woman stands perfectly still listening.",ev:["music_plays","shadow_dance"],ex:["dining_room","servants_hall"],person:"lily"},
-  {id:"servants_hall",n:"Servants hall",ic:"[Sv]",desc:"Cramped quarters. Beds still made. A service bell rings labeled with your name.",ev:["bell_rings"],ex:["ballroom","cellar_stair","outside_door"]},
-  {id:"outside_door",n:"Back door",ic:"[O]",safe:1,desc:"A heavy bolt. You could escape but the monster still roams inside.",ev:[],ex:["servants_hall"],esc:1},
-  {id:"nursery",n:"Nursery",ic:"[N]",desc:"Toys in a circle. A rocking horse moves on its own. Under the cot a tail thumps the floorboards.",ev:["toys_move","rocking_horse"],ex:["hallway","attic_stair"],dog:"noel"},
-  {id:"attic_stair",n:"Attic stairs",ic:"[As]",desc:"Steep narrow stairs. The air grows colder with each step upward.",ev:["cold_air"],ex:["study","nursery","attic"]},
-  {id:"attic",n:"Attic",ic:"[Ac]",desc:"Old trunks. A ritual circle in chalk on the floor. This is where it started.",ev:["ritual_circle","chest_locked"],ex:["attic_stair"],boss:1},
-  {id:"cellar_stair",n:"Cellar stairs",ic:"[Cs]",desc:"Stone steps into absolute dark. The cold is oppressive. Something moves below.",ev:["cold_breath","scraping"],ex:["kitchen","foyer","dining_room","servants_hall","cellar"]},
-  {id:"cellar",n:"Cellar",ic:"[Ce]",desc:"A vast stone vault. Chains from the ceiling. In the shadows a small dog growling at something only it can sense.",ev:[],ex:["cellar_stair"],boss:1,dog:"rudy"},
-  {id:"secret_passage",n:"Secret passage",ic:"[Sp]",desc:"A hidden corridor behind the bookshelf. Scratches: IT SEES THROUGH WALLS.",ev:["scratches"],ex:["library","attic","cellar"]},
-];
-
-var ITEMS={
-  torch:{n:"torch",t:"",d:"Fire damage. Effective vs the Cellar Beast."},
-  lantern:{n:"lantern",t:"",d:"Carries calming light through the dark."},
-  crucifix:{n:"crucifix",t:"tag-c",d:"Repels the Attic Wraith."},
-  knife:{n:"knife",t:"",d:"Light weapon. Weak vs major monsters."},
-  iron_key:{n:"iron key",t:"tag-k",d:"Opens locked furniture and doors."},
-  journal:{n:"journal",t:"tag-k",d:"Reveals the manor history and boss weaknesses."},
-  salt:{n:"salt",t:"tag-c",d:"Creates a protective circle. Restores sanity."},
-  amulet:{n:"amulet",t:"tag-c",d:"Absorbs one fatal hit. Shatters on use."},
-  vial:{n:"vial",t:"tag-d",d:"Heal or poison unknown until drunk."},
-  rope:{n:"rope",t:"",d:"Reveals alternate escape routes."},
-  noel:{n:"Noel",t:"tag-dog",d:"A golden retriever. Brave and loyal."},
-  rudy:{n:"Rudy",t:"tag-dog",d:"A scruffy terrier. Absolute unit."},
-  dan:{n:"Dan",t:"tag-dan",d:"A survivor. Knows the manor secrets."},
-  lily:{n:"Lily",t:"tag-lily",d:"A survivor. Calm under pressure."},
-};
-
+var SKIP_IDS={"noel_rescue":1,"rudy_guardian":1,"monster_pet":1,"both_dogs":1,"dogs_teamwork":1,"dan_escape":1,"dan_fight":1,"dan_secret":1,"lily_escape":1,"lily_fight":1,"lily_secret":1,"insanity":1,"poison":1,"death_hp":1,"salt_boss":1,"no_items":1,"flee":1,"rope_escape":1,"amulet_used":1};
+var SAVE={unlocked:{},runs:0,gen:null,achievements:{},scareCount:0};
+try{var _s=localStorage.getItem("manor_v10");if(_s)SAVE=JSON.parse(_s);}catch(e){}
+function save(){try{localStorage.setItem("manor_v10",JSON.stringify(SAVE));}catch(e){}}
+var ALL=CORE.slice(),ready=false,genRunning=false,screen="menu",jf="all",G={};
+function showAchievement(id){var a=null;for(var i=0;i<ACHIEVEMENTS.length;i++){if(ACHIEVEMENTS[i].id===id){a=ACHIEVEMENTS[i];break;}}if(!a||SAVE.achievements[id])return;SAVE.achievements[id]=1;save();var el=document.getElementById("apop");var div=document.createElement("div");div.className="achiev-popup";div.innerHTML='<div style="font-size:10px;color:#9a8060;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">achievement unlocked</div><div style="font-size:14px;font-weight:bold;color:#AFA9EC;margin-bottom:2px">'+a.l+'</div><div style="font-size:11px;color:#9a8060">'+a.desc+'</div>';el.appendChild(div);setTimeout(function(){div.style.opacity="0";div.style.transition="opacity .5s";setTimeout(function(){div.remove();},500);},3000);}
+function checkAchievements(){if(!G.dogs||!G.people)return;if(G.dogs.length>=1)showAchievement("a_first_dog");if(G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0)showAchievement("a_the_pack");if(G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0&&G.moves>=10)showAchievement("a_noel_rudy_bond");if(G.people.indexOf("dan")>=0)showAchievement("a_found_dan");if(G.people.indexOf("lily")>=0)showAchievement("a_found_lily");if(G.people.indexOf("dan")>=0&&G.people.indexOf("lily")>=0&&G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0)showAchievement("a_found_all");if((SAVE.runs||0)>=100)showAchievement("a_100runs");var dogE=["noel_rescue","rudy_guardian","both_dogs","monster_pet","dogs_teamwork"];var ok=true;for(var i=0;i<dogE.length;i++){if(!SAVE.unlocked[dogE[i]]){ok=false;break;}}if(ok)showAchievement("a_all_dog_endings");var danE=["dan_escape","dan_fight","dan_secret"];ok=true;for(var i=0;i<danE.length;i++){if(!SAVE.unlocked[danE[i]]){ok=false;break;}}if(ok)showAchievement("a_all_dan_endings");var lilE=["lily_escape","lily_fight","lily_secret"];ok=true;for(var i=0;i<lilE.length;i++){if(!SAVE.unlocked[lilE[i]]){ok=false;break;}}if(ok)showAchievement("a_all_lily_endings");if((SAVE.scareCount||0)>=1)showAchievement("a_jumpscared");if((SAVE.scareCount||0)>=5)showAchievement("a_jumpscared5");}
+async function genEndings(){if(genRunning)return;if(SAVE.gen&&SAVE.gen.length>0){var ids={};for(var i=0;i<CORE.length;i++){ids[CORE[i].id]=1;}ALL=CORE.slice();for(var i=0;i<SAVE.gen.length;i++){if(!ids[SAVE.gen[i].id])ALL.push(SAVE.gen[i]);}ready=true;if(screen==="menu")render();return;}genRunning=true;var taken=[];for(var i=0;i<CORE.length;i++){taken.push(CORE[i].id);}try{var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:7000,messages:[{role:"user",content:"Design 68 more unique endings for horror game Manor of Dread. Players explore a manor collect items (torch lantern crucifix knife iron_key journal salt amulet vial rope) manage HP and sanity fight The Cellar Beast (weak: torch) or Attic Wraith (weak: crucifix/salt). Characters: dogs Noel (nursery) and Rudy (cellar) survivors Dan (study) and Lily (ballroom). IDs used: "+taken.join(",")+". Return exactly 68 endings as a raw JSON array. Each: {id,l,cat,i,cond,desc}. cat: victory/escape/death/madness/secret/cursed/neutral. i: single ASCII char. cond: under 12 words. desc: 1-2 atmospheric sentences. Return ONLY the array."}]})});var data=await res.json();var txt="";for(var i=0;i<data.content.length;i++){if(data.content[i].type==="text")txt+=data.content[i].text;}var match=txt.match(/\[[\s\S]*\]/);if(match){var parsed=JSON.parse(match[0]);var ids={};for(var i=0;i<CORE.length;i++){ids[CORE[i].id]=1;}SAVE.gen=[];for(var i=0;i<parsed.length;i++){if(parsed[i].id&&parsed[i].l&&parsed[i].cat&&parsed[i].desc&&!ids[parsed[i].id]){SAVE.gen.push(parsed[i]);if(SAVE.gen.length>=68)break;}}ALL=CORE.slice();for(var i=0;i<SAVE.gen.length;i++){ALL.push(SAVE.gen[i]);}save();}ready=true;}catch(e){ready=true;}genRunning=false;if(screen==="menu")render();}
+var ROOMS=[{id:"foyer",n:"Grand foyer",ic:"[F]",safe:1,desc:"The entrance hall. A cracked mirror reflects something that is not you. Three archways stretch into darkness.",ev:[],ex:["hallway","parlor","cellar_stair"]},{id:"hallway",n:"East hallway",ic:"[H]",desc:"A long corridor. Portraits watch you. Sconces flicker and die.",ev:["portraits_move","floor_creak"],ex:["library","kitchen","nursery","foyer"]},{id:"parlor",n:"Parlor",ic:"[P]",desc:"Red velvet chairs around a cold fireplace. A chess set mid-game. Someone was just here.",ev:["chess_move","cold_breath"],ex:["foyer","study","dining_room"]},{id:"library",n:"Library",ic:"[L]",desc:"Towering bookshelves in shadow. A ladder knocked over. One book open on the floor.",ev:["book_open","shelf_fall"],ex:["hallway","secret_passage","study"]},{id:"study",n:"Study",ic:"[S]",desc:"A locked desk. Maps on the wall. A man crouches behind the bookshelf wide-eyed.",ev:["desk_locked","map_clue"],ex:["library","parlor","attic_stair"],person:"dan"},{id:"kitchen",n:"Kitchen",ic:"[K]",desc:"The smell of decay. Pots boil on a cold stove with nothing in them.",ev:["boiling_pots","scratching"],ex:["hallway","larder","cellar_stair"]},{id:"larder",n:"Larder",ic:"[Ld]",desc:"Rotting preserves. Whatever was locked inside broke the lock from within.",ev:["jar_break","thing_inside"],ex:["kitchen"]},{id:"dining_room",n:"Dining room",ic:"[D]",desc:"A table set for twelve. Food still steaming. Chairs scraped back mid-meal.",ev:["chairs_scrape","candles"],ex:["parlor","ballroom","cellar_stair"]},{id:"ballroom",n:"Ballroom",ic:"[B]",desc:"An enormous dark room. A waltz plays from nowhere. A young woman stands perfectly still listening.",ev:["music_plays","shadow_dance"],ex:["dining_room","servants_hall"],person:"lily"},{id:"servants_hall",n:"Servants hall",ic:"[Sv]",desc:"Cramped quarters. Beds still made. A service bell rings labeled with your name.",ev:["bell_rings"],ex:["ballroom","cellar_stair","outside_door"]},{id:"outside_door",n:"Back door",ic:"[O]",safe:1,desc:"A heavy bolt. You could escape but the monster still roams inside.",ev:[],ex:["servants_hall"],esc:1},{id:"nursery",n:"Nursery",ic:"[N]",desc:"Toys in a circle. A rocking horse moves on its own. Under the cot a tail thumps the floorboards.",ev:["toys_move","rocking_horse"],ex:["hallway","attic_stair"],dog:"noel"},{id:"attic_stair",n:"Attic stairs",ic:"[As]",desc:"Steep narrow stairs. The air grows colder with each step upward.",ev:["cold_air"],ex:["study","nursery","attic"]},{id:"attic",n:"Attic",ic:"[Ac]",desc:"Old trunks. A ritual circle in chalk on the floor. This is where it started.",ev:["ritual_circle","chest_locked"],ex:["attic_stair"],boss:1},{id:"cellar_stair",n:"Cellar stairs",ic:"[Cs]",desc:"Stone steps into absolute dark. The cold is oppressive. Something moves below.",ev:["cold_breath","scraping"],ex:["kitchen","foyer","dining_room","servants_hall","cellar"]},{id:"cellar",n:"Cellar",ic:"[Ce]",desc:"A vast stone vault. Chains from the ceiling. In the shadows a small dog growling at something only it can sense.",ev:[],ex:["cellar_stair"],boss:1,dog:"rudy"},{id:"secret_passage",n:"Secret passage",ic:"[Sp]",desc:"A hidden corridor behind the bookshelf. Scratches on the wall: IT SEES THROUGH WALLS.",ev:["scratches"],ex:["library","attic","cellar"]}];
+var ITEMS={torch:{n:"torch",t:"",d:"Fire damage. Effective vs the Cellar Beast."},lantern:{n:"lantern",t:"",d:"Carries calming light through the dark."},crucifix:{n:"crucifix",t:"tag-c",d:"Repels the Attic Wraith."},knife:{n:"knife",t:"",d:"Light weapon. Weak vs major monsters."},iron_key:{n:"iron key",t:"tag-k",d:"Opens locked furniture and doors."},journal:{n:"journal",t:"tag-k",d:"Reveals the manor history and boss weaknesses."},salt:{n:"salt",t:"tag-c",d:"Creates a protective circle. Restores sanity."},amulet:{n:"amulet",t:"tag-c",d:"Absorbs one fatal hit. Shatters on use."},vial:{n:"vial",t:"tag-d",d:"Heal or poison unknown until drunk."},rope:{n:"rope",t:"",d:"Reveals alternate escape routes."},noel:{n:"Noel",t:"tag-dog",d:"A golden retriever. Brave and loyal."},rudy:{n:"Rudy",t:"tag-dog",d:"A scruffy terrier. Absolute unit."},dan:{n:"Dan",t:"tag-dan",d:"A survivor. Knows the manor secrets."},lily:{n:"Lily",t:"tag-lily",d:"A survivor. Calm under pressure."}};
 var IROOMS={kitchen:["knife"],larder:["salt"],library:["journal","lantern"],study:["iron_key"],nursery:["amulet"],dining_room:["vial"],ballroom:["rope"],servants_hall:["torch"],secret_passage:["crucifix"]};
-
-var EVS={
-  portraits_move:{t:"The portraits eyes shift to follow you.",d:0,f:6},
-  floor_creak:{t:"A floorboard CRACKS. Something in the walls goes quiet.",d:0,f:8},
-  chess_move:{t:"A chess piece slides on its own.",d:0,f:7},
-  cold_breath:{t:"Your breath fogs. Something unseen exhales in your ear.",d:5,f:10},
-  book_open:{t:"A book flips to a page on fatal invocations.",d:0,f:5},
-  shelf_fall:{t:"A shelf collapses toward you. You dodge barely.",d:12,f:4},
-  desk_locked:{t:"The desk rattles violently then goes still.",d:0,f:6},
-  map_clue:{t:"You study the circled room. Something important is there.",d:0,f:0,clue:1},
-  boiling_pots:{t:"Scalding steam burns your arm.",d:10,f:0},
-  scratching:{t:"Rhythmic scratching from inside the walls.",d:0,f:12},
-  jar_break:{t:"A jar shatters on the floor.",d:5,f:4},
-  thing_inside:{t:"Whatever was locked in here left claw marks on the ceiling.",d:0,f:14},
-  chairs_scrape:{t:"Every chair scrapes back in unison. No one is seated.",d:0,f:10},
-  candles:{t:"All candles blow out at once. Three heartbeats of total darkness.",d:0,f:11},
-  music_plays:{t:"The music stops on a single discordant note.",d:0,f:8},
-  shadow_dance:{t:"One shadow does not match anything in the room. It looks at you.",d:0,f:14},
-  bell_rings:{t:"A service bell rings labeled with your name.",d:0,f:18},
-  toys_move:{t:"The toys rearrange into an arrow pointing down.",d:0,f:12},
-  rocking_horse:{t:"The rocking horse stops facing you directly.",d:0,f:8},
-  cold_air:{t:"The temperature drops 20 degrees in an instant.",d:5,f:7},
-  ritual_circle:{t:"The chalk circle begins to glow faintly. Do not step inside.",d:0,f:10},
-  chest_locked:{t:"A chest rattles from inside. Something wants out.",d:0,f:12},
-  scraping:{t:"Something enormous dragging itself across stone.",d:0,f:14},
-  scratches:{t:"The scratches read: IT SEES THROUGH WALLS.",d:0,f:12},
-  mewing_cat:{t:"A sigma cat appears from nowhere. It looks you dead in the eyes. It starts mewing.",d:0,f:0,mew:1},
-};
-
-var BOSSES={
-  cellar:{n:"The Cellar Beast",weak:["torch"],desc:"A massive creature of bone and shadow. Its breath turns the air black.",
-    atk:[{t:"It swipes with a claw the size of a door.",d:30},{t:"It ROARS. The sound alone cracks your ribs.",d:20},{t:"It grabs you and squeezes.",d:35}],
-    win:"You thrust the torch into its chest. It shrieks. Fire takes it. The beast collapses into ash.",
-    lose:"The darkness swallows you whole."},
-  attic:{n:"The Attic Wraith",weak:["crucifix","salt"],desc:"A pale figure with no feet hovering over the ritual circle. It screams without sound.",
-    atk:[{t:"It passes through you. Icy cold fills your lungs.",d:22},{t:"It shows you a vision of your worst fear.",d:28},{t:"It shrieks and cracks the floorboards beneath you.",d:18}],
-    win:"You press the crucifix forward. The wraith contorts and dissolves into cold mist.",
-    lose:"You become part of the ritual. Another portrait for the hallway."},
-};
-
+var EVS={portraits_move:{t:"The portraits eyes shift to follow you.",d:0,f:6},floor_creak:{t:"A floorboard CRACKS. Something in the walls goes quiet.",d:0,f:8},chess_move:{t:"A chess piece slides on its own.",d:0,f:7},cold_breath:{t:"Your breath fogs. Something unseen exhales in your ear.",d:5,f:10},book_open:{t:"A book flips to a page on fatal invocations.",d:0,f:5},shelf_fall:{t:"A shelf collapses toward you. You dodge barely.",d:12,f:4},desk_locked:{t:"The desk rattles violently then goes still.",d:0,f:6},map_clue:{t:"You study the circled room. Something important is there.",d:0,f:0,clue:1},boiling_pots:{t:"Scalding steam burns your arm.",d:10,f:0},scratching:{t:"Rhythmic scratching from inside the walls.",d:0,f:12},jar_break:{t:"A jar shatters on the floor.",d:5,f:4},thing_inside:{t:"Whatever was locked in here left claw marks on the ceiling.",d:0,f:14},chairs_scrape:{t:"Every chair scrapes back in unison. No one is seated.",d:0,f:10},candles:{t:"All candles blow out at once. Three heartbeats of total darkness.",d:0,f:11},music_plays:{t:"The music stops on a single discordant note.",d:0,f:8},shadow_dance:{t:"One shadow does not match anything in the room. It looks at you.",d:0,f:14},bell_rings:{t:"A service bell rings labeled with your name.",d:0,f:18},toys_move:{t:"The toys rearrange into an arrow pointing down.",d:0,f:12},rocking_horse:{t:"The rocking horse stops facing you directly.",d:0,f:8},cold_air:{t:"The temperature drops 20 degrees in an instant.",d:5,f:7},ritual_circle:{t:"The chalk circle begins to glow faintly. Do not step inside.",d:0,f:10},chest_locked:{t:"A chest rattles from inside. Something wants out.",d:0,f:12},scraping:{t:"Something enormous dragging itself across stone.",d:0,f:14},scratches:{t:"The scratches read: IT SEES THROUGH WALLS.",d:0,f:12}};
+var BOSSES={cellar:{n:"The Cellar Beast",weak:["torch"],desc:"A massive creature of bone and shadow. Its breath turns the air black.",atk:[{t:"It swipes with a claw the size of a door.",d:30},{t:"It ROARS. The sound alone cracks your ribs.",d:20},{t:"It grabs you and squeezes.",d:35}],win:"You thrust the torch into its chest. It shrieks. Fire takes it. The beast collapses into ash.",lose:"The darkness swallows you whole."},attic:{n:"The Attic Wraith",weak:["crucifix","salt"],desc:"A pale figure with no feet hovering over the ritual circle. It screams without sound.",atk:[{t:"It passes through you. Icy cold fills your lungs.",d:22},{t:"It shows you a vision of your worst fear.",d:28},{t:"It shrieks and cracks the floorboards beneath you.",d:18}],win:"You press the crucifix forward. The wraith contorts and dissolves into cold mist.",lose:"You become part of the ritual. Another portrait for the hallway."}};
 function rm(id){for(var i=0;i<ROOMS.length;i++){if(ROOMS[i].id===id)return ROOMS[i];}return null;}
 function catSt(id){for(var i=0;i<CATS_DATA.length;i++){if(CATS_DATA[i].id===id)return CATS_DATA[i];}return{id:"neutral",l:"Unknown",c:"#9a8060",bg:"#180e06",b:"#4a3018"};}
 function addLog(msg,cls){G.log.unshift({msg:msg,cls:cls});if(G.log.length>12)G.log.pop();}
 function hpC(){return G.hp>50?"#60a030":G.hp>25?"#EF9F27":"#E04040";}
 function snC(){return G.sanity>60?"#60a030":G.sanity>30?"#EF9F27":"#E04040";}
-
-function newGame(){
-  G={hp:100,sanity:100,moves:0,items:[],visited:{foyer:1},current:"foyer",log:[],
-    ir:JSON.parse(JSON.stringify(IROOMS)),
-    boss:Math.random()<.5?"cellar":"attic",
-    saltUsed:0,dogs:[],people:[],end:null,clue:0};
-  SAVE.runs=(SAVE.runs||0)+1;save();
-  screen="game";render();
-}
-
-function trigEv(id){
-  var e=EVS[id];if(!e)return;
-  if(e.mew){
-    // Mewing cat event — trigger jumpscare then apply fright after
-    SAVE.mewCount=(SAVE.mewCount||0)+1;save();
-    var fright=triggerScare(function(){
-      G.sanity=Math.max(0,G.sanity-20);
-      addLog("The sigma cat appeared. You lost 20 sanity. No cap.","le-cat");
-      SAVE.unlocked["sigma_scare"]=1;save();
-      checkAchievements();
-      if(G.sanity<=0){addLog("Your mind shatters from the mewing.","le-bad");endGame("insanity");}
-      else render();
-    });
-    return;
-  }
-  if(e.d)G.hp=Math.max(0,G.hp-e.d);
-  if(e.f)G.sanity=Math.max(0,G.sanity-e.f);
-  if(e.clue)G.clue=1;
-  addLog(e.t,e.d||e.f>12?"le-bad":"le-warn");
-}
-
-// Random mewing chance on room entry
-function maybeMew(callback){
-  // ~15% chance per new room visit
-  if(Math.random()<0.15){
-    SAVE.mewCount=(SAVE.mewCount||0)+1;save();
-    SAVE.unlocked["sigma_scare"]=1;save();
-    triggerScare(function(){
-      G.sanity=Math.max(0,G.sanity-20);
-      addLog("A sigma cat leapt from the shadows. Mewing intensified. -20 sanity.","le-cat");
-      checkAchievements();
-      if(callback)callback();
-    });
-  } else {
-    if(callback)callback();
-  }
-}
-
-function checkSpecial(base){
-  var win=base==="slay_beast"||base==="slay_wraith";
-  if(win){
-    if(G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0&&G.hp>=100)showAchievement("a_dog_survivor");
-    if(G.hp>=100)return "full_hp";
-    if(G.sanity>=100){showAchievement("a_sanity_steel");return "full_sanity";}
-    if(G.hp<5)showAchievement("a_survived_low");
-    if(G.hp<10)return "low_hp";
-    if(G.items.indexOf("torch")>=0&&G.items.indexOf("crucifix")>=0)return "both_items";
-    if(G.items.indexOf("lantern")>=0)return "lantern_win";
-    if(G.items.indexOf("journal")>=0)return "journal_win";
-    var ri=[];for(var i=0;i<G.items.length;i++){if(["noel","rudy","dan","lily"].indexOf(G.items[i])<0)ri.push(G.items[i]);}
-    if(ri.length>=8)return "collector";
-    if(Object.keys(G.visited).length>=ROOMS.length)return "explorer";
-    if(G.moves<=14)return "speed_run";
-    if(base==="slay_beast"&&G.moves<=5)return "speed_cellar";
-    if(ri.length===1&&ri[0]==="knife")return "knife_only";
-  }
-  return base;
-}
-
-function buildChoices(){
-  var r=rm(G.current);var ch=[];
-  // Dog
-  if(r.dog&&G.dogs.indexOf(r.dog)<0){
-    (function(dog){
-      var dn=dog==="noel"?"Noel":"Rudy";
-      ch.push({t:"Call "+dn+" over - good boy!",c:"btn-dog",a:function(){
-        G.dogs.push(dog);G.items.push(dog);G.moves++;
-        var both=G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0;
-        addLog(dn+" joins you!"+(both?" Noel and Rudy immediately become best friends.":""),"le-dog");
-        checkAchievements();render();
-      }});
-    })(r.dog);
-  }
-  // Person
-  if(r.person&&G.people.indexOf(r.person)<0){
-    (function(person){
-      var pn=person==="dan"?"Dan":"Lily";
-      var pd=person==="dan"?"He is terrified but willing to help.":"She looks surprisingly calm.";
-      var pc=person==="dan"?"btn-dan":"btn-lily";
-      var lc=person==="dan"?"le-dan":"le-lily";
-      ch.push({t:"Bring "+pn+" with you",c:pc,a:function(){
-        G.people.push(person);G.items.push(person);G.moves++;
-        addLog(pn+" joins you. "+pd,lc);
-        checkAchievements();render();
-      }});
-    })(r.person);
-  }
-  // Items
-  var ri=G.ir[G.current]||[];
-  for(var ii=0;ii<ri.length;ii++){
-    (function(item){
-      ch.push({t:"Pick up "+ITEMS[item].n,c:"btn-green",a:function(){
-        G.items.push(item);
-        G.ir[G.current]=G.ir[G.current].filter(function(x){return x!==item;});
-        addLog("Found: "+ITEMS[item].n+" - "+ITEMS[item].d,"le-good");G.moves++;render();
-      }});
-    })(ri[ii]);
-  }
-  // Exits
-  for(var ei=0;ei<r.ex.length;ei++){
-    (function(ex){
-      var d=rm(ex);if(!d)return;
-      var boss=d.boss&&ex===G.boss;
-      ch.push({t:"Go to "+(G.visited[ex]?d.n:"???")+(boss?" [MONSTER]":""),c:boss?"btn-danger":"",a:function(){moveTo(ex);}});
-    })(r.ex[ei]);
-  }
-  // Escape
-  if(r.esc){
-    ch.push({t:"Flee through the back door",c:"btn-green",a:function(){
-      var hasDan=G.people.indexOf("dan")>=0,hasLily=G.people.indexOf("lily")>=0;
-      if(hasDan&&hasLily){addLog("Dan and Lily sprint out into the night.","le-dan");endGame("dan_escape");}
-      else if(hasDan){addLog("Dan runs out beside you breathing hard.","le-dan");endGame("dan_escape");}
-      else if(hasLily){addLog("Lily leads the way out without looking back.","le-lily");endGame("lily_escape");}
-      else endGame("flee");
-    }});
-    if(G.items.indexOf("rope")>=0)ch.push({t:"Rope-climb the hidden window",c:"btn-purple",a:function(){endGame("rope_escape");}});
-  }
-  // Boss
-  if(r.boss&&G.current===G.boss){
-    var bk=G.current==="cellar"?"cellar":"attic";
-    var boss=BOSSES[bk];
-    var real=[];for(var i=0;i<G.items.length;i++){if(["noel","rudy","dan","lily"].indexOf(G.items[i])<0)real.push(G.items[i]);}
-    var hasN=G.items.indexOf("noel")>=0,hasR=G.items.indexOf("rudy")>=0;
-    var hasDan=G.people.indexOf("dan")>=0,hasLily=G.people.indexOf("lily")>=0;
-    if(hasN&&hasR&&real.length===0&&!hasDan&&!hasLily)
-      ch.push({t:"Let Noel and Rudy handle this",c:"btn-dog",a:function(){addLog("Noel and Rudy approach. The monster hesitates...","le-dog");endGame("monster_pet");}});
-    if(hasN&&hasR)
-      ch.push({t:"Noel + Rudy - ATTACK TOGETHER!",c:"btn-dog",a:function(){addLog("Noel goes high Rudy goes low!","le-dog");showAchievement("a_dogs_fight");endGame("dogs_teamwork");}});
-    else if(hasN)
-      ch.push({t:"Send Noel in!",c:"btn-dog",a:function(){addLog("Noel charges with a bark that shakes the walls!","le-dog");endGame("noel_rescue");}});
-    else if(hasR)
-      ch.push({t:"Rudy - hold the line!",c:"btn-dog",a:function(){addLog("Rudy plants himself between you and the monster.","le-dog");endGame("rudy_guardian");}});
-    if(hasDan)
-      ch.push({t:"Fight alongside Dan",c:"btn-dan",a:function(){
-        if(real.length>0){addLog("Dan throws books while you strike!","le-dan");endGame("dan_fight");}
-        else fightBoss(null);
-      }});
-    if(hasLily)
-      ch.push({t:"Fight alongside Lily",c:"btn-lily",a:function(){
-        if(G.items.indexOf("crucifix")>=0){addLog("Lily raises the crucifix. She has done this before.","le-lily");endGame("lily_fight");}
-        else fightBoss(null);
-      }});
-    for(var wi=0;wi<boss.weak.length;wi++){
-      (function(w){
-        if(G.items.indexOf(w)>=0)ch.push({t:"Use "+ITEMS[w].n+" against "+boss.n,c:"btn-purple",a:function(){fightBoss(w);}});
-      })(boss.weak[wi]);
-    }
-    if(real.length===0&&!hasN&&!hasR&&!hasDan&&!hasLily)
-      ch.push({t:"Fight bare-handed (no items!)",c:"btn-danger",a:function(){addLog("You charge with nothing but desperation.","le-bad");endGame("no_items");}});
-    else ch.push({t:"Fight bare-handed",c:"btn-danger",a:function(){fightBoss(null);}});
-    ch.push({t:"Run! Back the way you came",c:"",a:function(){moveTo(r.ex[0]);}});
-  }
-  // Salt
-  if(G.items.indexOf("salt")>=0&&!G.saltUsed)ch.push({t:"Pour a salt circle",c:"btn-green",a:function(){
-    var inBoss=rm(G.current).boss&&G.current===G.boss;
-    G.saltUsed=1;G.sanity=Math.min(100,G.sanity+15);
-    G.items=G.items.filter(function(i){return i!=="salt";});
-    if(inBoss){endGame("salt_boss");return;}
-    addLog("You pour a salt circle. The air calms. (+15 sanity)","le-good");render();
-  }});
-  // Vial
-  if(G.items.indexOf("vial")>=0)ch.push({t:"Drink the vial",c:"btn-purple",a:function(){
-    G.items=G.items.filter(function(i){return i!=="vial";});
-    if(Math.random()<.5){G.hp=Math.min(100,G.hp+30);addLog("The liquid heals you. (+30 HP)","le-good");}
-    else{G.hp=Math.max(0,G.hp-20);addLog("Poison! (-20 HP)","le-bad");if(G.hp<=0){endGame("poison");return;}}
-    render();
-  }});
-  // Dan secret
-  if(G.people.indexOf("dan")>=0&&G.items.indexOf("journal")>=0&&!SAVE.unlocked["dan_secret"])
-    ch.push({t:"Show Dan the journal",c:"btn-dan",a:function(){addLog("Dan goes very quiet. I wrote that he says.","le-dan");endGame("dan_secret");}});
-  // Lily secret
-  if(G.people.indexOf("lily")>=0&&G.items.indexOf("lantern")>=0&&!SAVE.unlocked["lily_secret"]&&G.current==="ballroom")
-    ch.push({t:"Hold the lantern to Lily's face",c:"btn-lily",a:function(){addLog("The light catches her face. She smiles not with relief.","le-lily");endGame("lily_secret");}});
-  return ch;
-}
-
-function moveTo(dest){
-  var d=rm(dest);if(!d)return;
-  G.current=dest;G.moves++;
-  var isNew=!G.visited[dest];
-  G.visited[dest]=1;
-  if(isNew){
-    if(d.ev&&d.ev.length){
-      var evId=d.ev[Math.floor(Math.random()*d.ev.length)];
-      trigEv(evId);
-    }
-    if(d.dog&&G.dogs.indexOf(d.dog)<0)addLog("You hear a dog - "+(d.dog==="noel"?"Noel":"Rudy")+" is in this room!","le-dog");
-    if(d.person&&G.people.indexOf(d.person)<0)addLog("Someone is hiding here - "+(d.person==="dan"?"Dan":"Lily")+"!",d.person==="dan"?"le-dan":"le-lily");
-    // Random mewing on new room
-    maybeMew(function(){
-      checkAchievements();
-      if(G.hp<=0)endGame("death_hp");
-      else if(G.sanity<=0){addLog("Your mind shatters.","le-bad");endGame("insanity");}
-      else render();
-    });
-    return;
-  }
-  checkAchievements();
-  if(G.hp<=0)endGame("death_hp");
-  else if(G.sanity<=0){addLog("Your mind shatters.","le-bad");endGame("insanity");}
-  else render();
-}
-
-function fightBoss(weapon){
-  var bk=G.current==="cellar"?"cellar":"attic";
-  var boss=BOSSES[bk];G.moves++;
-  if(weapon&&boss.weak.indexOf(weapon)>=0){
-    G.items=G.items.filter(function(i){return i!==weapon;});
-    addLog(boss.win,"le-good");
-    showAchievement("a_first_win");
-    endGame(bk==="cellar"?"slay_beast":"slay_wraith");
-  } else {
-    var atk=boss.atk[Math.floor(Math.random()*boss.atk.length)];
-    if(G.items.indexOf("amulet")>=0&&G.hp-atk.d<=0){
-      G.items=G.items.filter(function(i){return i!=="amulet";});
-      addLog("The amulet SHATTERS - absorbed a fatal blow!","le-good");
-      G.sanity=Math.max(0,G.sanity-10);addLog(atk.t,"le-bad");
-      if(G.sanity<=0){endGame("insanity");return;}
-      endGame("amulet_used");return;
-    }
-    G.hp=Math.max(0,G.hp-atk.d);G.sanity=Math.max(0,G.sanity-10);
-    addLog(atk.t,"le-bad");
-    if(G.hp<=0){addLog(boss.lose,"le-bad");endGame("death_hp");}
-    else if(G.sanity<=0){addLog("Your mind breaks.","le-bad");endGame("insanity");}
-    else render();
-  }
-}
-
-function endGame(raw){
-  var fid=SKIP_IDS[raw]?raw:(checkSpecial(raw)||raw);
-  G.end=fid;SAVE.unlocked[fid]=1;save();
-  checkAchievements();
-  screen="ending";render();
-}
-
-function buildMap(){
-  var html='<div class="mgrid">';
-  for(var i=0;i<ROOMS.length;i++){
-    var r=ROOMS[i];
-    var v=G.visited[r.id],cur=G.current===r.id;
-    var dogHere=r.dog&&v&&G.dogs.indexOf(r.dog)<0;
-    var danHere=r.person==="dan"&&v&&G.people.indexOf("dan")<0;
-    var lilyHere=r.person==="lily"&&v&&G.people.indexOf("lily")<0;
-    var cls=cur?"cur":danHere?"danr":lilyHere?"lilyr":dogHere?"dogr":v?"vis":r.safe?"saf":"unk";
-    var tip=cur?r.n:v?r.n+(dogHere?" - dog!":danHere?" - Dan!":lilyHere?" - Lily!":""):"???";
-    html+='<div class="rc '+cls+'" title="'+tip+'">'+(cur?"[*]":r.ic)+'</div>';
-  }
-  return html+'</div>';
-}
-
-function catRow(e){
-  var got=SAVE.unlocked[e.id];
-  var isDog=e.cat==="dog",isDan=e.cat==="dan",isLily=e.cat==="lily",isSig=e.cat==="sigma";
-  var isSec=e.cat==="secret"&&!got;
-  var eiC=got?(isDog?"ei ei-dog":isDan?"ei ei-dan":isLily?"ei ei-lily":"ei"):"ei ei-lock";
-  var enC=got?(isDog?"en en-dog":isDan?"en en-dan":isLily?"en en-lily":"en"):"en en-lock";
-  var ebC=got?(isDog?"eb eb-dog":isDan?"eb eb-dan":isLily?"eb eb-lily":"eb"):"eb eb-lock";
-  return '<div class="er"><div class="'+eiC+'">'+(got?e.i:"?")+'</div><div style="flex:1;min-width:0"><div class="'+enC+'">'+(isSec?"???":e.l)+'</div><div class="'+(got?"ed":"ed ed-lock")+'">'+(got?e.cond:isSec?"Keep exploring...":e.cond)+'</div></div><span class="'+ebC+'">'+(got?"found":"locked")+'</span></div>';
-}
-
-function renderMenu(){
-  var tot=ALL.length,unl=Object.keys(SAVE.unlocked).length,rem=tot-unl,pct=Math.round(unl/tot*100);
-  var achUnl=Object.keys(SAVE.achievements).length,achTot=ACHIEVEMENTS.length;
-  var cc={};for(var i=0;i<ALL.length;i++){cc[ALL[i].cat]=(cc[ALL[i].cat]||0)+1;}
-  var filt=jf==="achievements"?null:jf==="all"?ALL:ALL.filter(function(e){return e.cat===jf;});
-  var fhtml='<div class="cfilter"><div class="cf '+(jf==="all"?"cf-active":"")+'" onclick="jf=\'all\';render()">All ('+tot+')</div>';
-  for(var i=0;i<CATS_DATA.length;i++){
-    var c=CATS_DATA[i];
-    fhtml+='<div class="cf '+(jf===c.id?"cf-active":"")+'" onclick="jf=\''+c.id+'\';render()">'+c.l+(cc[c.id]?" ("+cc[c.id]+")":"")+'</div>';
-  }
-  fhtml+='<div class="cf '+(jf==="achievements"?"cf-active":"")+'" onclick="jf=\'achievements\';render()">Achievements ('+achTot+')</div></div>';
-  var rows="";
-  if(jf==="achievements"){
-    for(var i=0;i<ACHIEVEMENTS.length;i++){
-      var a=ACHIEVEMENTS[i];var got=SAVE.achievements[a.id];var hidden=a.secret&&!got;
-      rows+='<div class="er"><div class="'+(got?"ei ei-achiev":"ei ei-achiev-lock")+'">'+(got?a.icon:"?")+'</div><div style="flex:1;min-width:0"><div class="'+(got?"en en-achiev":"en en-lock")+'">'+(hidden?"???":a.l)+'</div><div class="'+(got?"ed":"ed ed-lock")+'">'+(hidden?"Keep exploring...":a.desc)+'</div></div><span class="'+(got?"eb eb-achiev":"eb eb-lock")+'">'+(got?"unlocked":"locked")+'</span></div>';
-    }
-  } else {for(var i=0;i<(filt||[]).length;i++){rows+=catRow(filt[i]);}}
-  return '<div class="title">Manor of Dread</div>'+
-    '<div class="subtitle">a haunted survival game &mdash; '+tot+' endings</div>'+
-    '<div class="castline"><span style="color:#4080C0">Noel <span class="wag">~</span> &nbsp; Rudy <span class="wag" style="animation-delay:.2s">~</span></span>&nbsp;&nbsp;&nbsp;<span style="color:#20906a">Dan</span>&nbsp;&nbsp;<span style="color:#C04070">Lily</span>&nbsp;&nbsp;<span style="color:#ff69b4">😼 Sigma Cat</span></div>'+
-    '<button class="btn btn-prim" onclick="newGame()">Enter the manor</button>'+
-    (SAVE.runs>0?'<p style="font-size:11px;color:#9a8060;margin-bottom:10px">total runs: '+SAVE.runs+' &nbsp;|&nbsp; mewing scares: '+(SAVE.mewCount||0)+'</p>':"")+
-    '<div class="dc"><div style="display:flex;gap:12px">'+
-    '<div style="flex:1"><div class="rl">endings</div><div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px"><span style="font-size:20px;font-weight:bold;color:#EF9F27">'+unl+'</span><span style="font-size:12px;color:#9a8060">/ '+tot+'</span></div><div class="pw"><div class="pi" style="width:'+pct+'%"></div></div></div>'+
-    '<div style="flex:1"><div class="rl">achievements</div><div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px"><span style="font-size:20px;font-weight:bold;color:#AFA9EC">'+achUnl+'</span><span style="font-size:12px;color:#9a8060">/ '+achTot+'</span></div><div class="pw"><div class="pi" style="width:'+Math.round(achUnl/achTot*100)+'%;background:#604890"></div></div></div>'+
-    '</div><div style="font-size:12px;color:#9a8060;margin-top:8px">'+(rem>0?rem+' ending'+(rem>1?"s":"")+" still to find.":"All endings found. The manor has no more secrets.")+'</div></div>'+
-    '<div class="dc"><div class="rl" style="margin-bottom:8px">journal &amp; achievements</div>'+
-    (!ready?'<div style="font-size:13px;color:#9a8060;padding:8px 0"><span class="spin"></span>Generating more endings from the dark...</div>':fhtml)+
-    '<div class="jscroll">'+rows+'</div></div>';
-}
-
-function renderEnding(){
-  var e=null;for(var i=0;i<ALL.length;i++){if(ALL[i].id===G.end){e=ALL[i];break;}}
-  if(!e){screen="menu";render();return;}
-  var cat=catSt(e.cat),tot=ALL.length,unl=Object.keys(SAVE.unlocked).length,achUnl=Object.keys(SAVE.achievements).length;
-  var survivors=[];
-  if(G.people.indexOf("dan")>=0)survivors.push("Dan made it out.");
-  if(G.people.indexOf("lily")>=0)survivors.push("Lily made it out.");
-  if(G.dogs.indexOf("noel")>=0)survivors.push("Noel made it out. Good boy.");
-  if(G.dogs.indexOf("rudy")>=0)survivors.push("Rudy made it out. Absolute unit.");
-  return '<div class="ecard" style="background:'+cat.bg+';border:1px solid '+cat.b+'">'+
-    '<span class="catb" style="background:'+cat.bg+';border:1px solid '+cat.b+';color:'+cat.c+'">'+cat.l+'</span>'+
-    '<div style="font-size:18px;font-weight:bold;color:'+cat.c+';margin-bottom:8px">'+e.l+'</div>'+
-    '<div style="font-size:13px;line-height:1.9;color:#e8d5b0">'+e.desc+'</div>'+
-    (survivors.length?'<div style="margin-top:10px;font-size:12px;color:#9a8060;line-height:1.8">'+survivors.join("<br>")+'</div>':"")+
-    '<div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap">'+
-    '<div><div class="sl">health</div><div style="font-size:15px;font-weight:bold;color:#f0e0c0">'+Math.round(G.hp)+'%</div></div>'+
-    '<div><div class="sl">sanity</div><div style="font-size:15px;font-weight:bold;color:#f0e0c0">'+Math.round(G.sanity)+'%</div></div>'+
-    '<div><div class="sl">moves</div><div style="font-size:15px;font-weight:bold;color:#f0e0c0">'+G.moves+'</div></div>'+
-    '<div><div class="sl">scares</div><div style="font-size:15px;font-weight:bold;color:#ff69b4">'+(SAVE.mewCount||0)+'x 😼</div></div>'+
-    '</div></div>'+
-    '<div class="dc"><div style="display:flex;gap:12px">'+
-    '<div style="flex:1"><div class="rl">endings</div><div style="display:flex;align-items:baseline;gap:6px;margin:3px 0"><span style="font-size:18px;font-weight:bold;color:#EF9F27">'+unl+'</span><span style="font-size:12px;color:#9a8060">/ '+tot+'</span></div><div class="pw"><div class="pi" style="width:'+Math.round(unl/tot*100)+'%"></div></div></div>'+
-    '<div style="flex:1"><div class="rl">achievements</div><div style="display:flex;align-items:baseline;gap:6px;margin:3px 0"><span style="font-size:18px;font-weight:bold;color:#AFA9EC">'+achUnl+'</span><span style="font-size:12px;color:#9a8060">/ '+ACHIEVEMENTS.length+'</span></div><div class="pw"><div class="pi" style="width:'+Math.round(achUnl/ACHIEVEMENTS.length*100)+'%;background:#604890"></div></div></div>'+
-    '</div><div style="font-size:12px;color:#9a8060;margin-top:6px">'+(tot-unl>0?(tot-unl)+' ending'+(tot-unl>1?"s":"")+" left to find.":"All endings found!")+'</div></div>'+
-    '<div class="choices"><button class="btn" onclick="newGame()">Play again</button><button class="btn btn-green" onclick="screen=\'menu\';render()">View journal</button></div>';
-}
-
-function render(){
-  var el=document.getElementById("main");
-  if(screen==="menu"){el.innerHTML=renderMenu();return;}
-  if(screen==="ending"){el.innerHTML=renderEnding();return;}
-  var r=rm(G.current),ch=buildChoices();
-  var isBoss=r.boss&&G.current===G.boss;
-  var boss=isBoss?(G.current==="cellar"?BOSSES.cellar:BOSSES.attic):null;
-  var noelHere=r.dog==="noel"&&G.dogs.indexOf("noel")<0;
-  var rudyHere=r.dog==="rudy"&&G.dogs.indexOf("rudy")<0;
-  var danHere=r.person==="dan"&&G.people.indexOf("dan")<0;
-  var lilyHere=r.person==="lily"&&G.people.indexOf("lily")<0;
-  var bothDogs=G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0;
-  var bothPeople=G.people.indexOf("dan")>=0&&G.people.indexOf("lily")>=0;
-  var html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
-    '<span style="font-size:11px;color:#9a8060;text-transform:uppercase;letter-spacing:.06em">manor of dread</span>'+
-    '<button class="btn" style="width:auto;padding:4px 12px;font-size:11px" onclick="screen=\'menu\';render()">menu</button></div>'+
-    '<div class="dc">'+
-    '<div class="rl">current room</div>'+
-    '<div style="font-size:15px;font-weight:bold;color:#EF9F27;margin-bottom:4px">'+r.n+'</div>'+
-    (isBoss?'<div style="font-size:12px;color:#C04030;margin-bottom:6px;font-weight:bold">- '+boss.n+' is here -</div>':"")+
-    (noelHere?'<div class="dogbanner">A golden retriever watches from under the cot tail thumping the floorboards. <span class="wag">~</span></div>':"")+
-    (rudyHere?'<div class="dogbanner">A scruffy terrier stands in the shadows growling at something only it can sense. <span class="wag">~</span></div>':"")+
-    (danHere?'<div class="danbanner">A man crouches behind the bookshelf wide-eyed and clutching a stack of books.</div>':"")+
-    (lilyHere?'<div class="lilybanner">A young woman stands perfectly still in the center of the room eyes closed listening.</div>':"")+
-    (bothDogs&&!isBoss?'<div style="font-size:11px;color:#4080C0;margin-bottom:8px">Noel <span class="wag" style="display:inline-block">~</span> and Rudy <span class="wag" style="display:inline-block;animation-delay:.2s">~</span> are with you.</div>':"")+
-    (bothPeople&&!isBoss?'<div style="font-size:11px;color:#9a8060;margin-bottom:8px"><span style="color:#20906a">Dan</span> and <span style="color:#C04070">Lily</span> are with you.</div>':"")+
-    '<div style="font-size:13px;line-height:1.85;color:#e8d5b0;margin-bottom:8px">'+(isBoss?'<span style="color:#F09595">'+boss.desc+'</span><br><br>':"")+r.desc+'</div>'+
-    (G.clue?'<div style="background:#100820;border:1px solid #504890;border-radius:6px;padding:8px 12px;font-size:12px;color:#AFA9EC;font-style:italic">Clue: The circled room on the map - something important is hidden there.</div>':"")+
-    '</div>'+
-    '<div class="sbar">'+
-    '<div class="sb"><div class="sl">health</div><div class="sv">'+Math.round(G.hp)+'%</div><div class="bw"><div class="bf" style="width:'+G.hp+'%;background:'+hpC()+'"></div></div></div>'+
-    '<div class="sb"><div class="sl">sanity</div><div class="sv">'+Math.round(G.sanity)+'%</div><div class="bw"><div class="bf" style="width:'+G.sanity+'%;background:'+snC()+'"></div></div></div>'+
-    '<div class="sb"><div class="sl">moves</div><div class="sv">'+G.moves+'</div></div>'+
-    '<div class="sb"><div class="sl">😼</div><div class="sv" style="color:#ff69b4">'+(SAVE.mewCount||0)+'x</div></div>'+
-    '</div>'+
-    '<div style="margin-bottom:8px;min-height:22px">';
-  if(G.items.length===0){html+='<span style="font-size:11px;color:#3a2810">no items</span>';}
-  else{for(var i=0;i<G.items.length;i++){var itm=ITEMS[G.items[i]];html+='<span class="tag '+(itm?itm.t||"":"")+'" title="'+(itm?itm.d||"":"")+'">'+(itm?itm.n:G.items[i])+'</span>';}}
-  html+='</div><div class="rl" style="margin-bottom:4px">map <span style="font-size:9px;color:#9a8060">- <span style="color:#4080C0">blue</span>=dog <span style="color:#20906a">green</span>=Dan <span style="color:#C04070">pink</span>=Lily</span></div>'+
-    buildMap()+
-    '<div class="choices">';
-  for(var i=0;i<ch.length;i++){html+='<button class="btn '+(ch[i].c||"")+'" onclick="C('+i+')">'+ch[i].t+'</button>';}
-  html+='</div><div class="log">';
-  for(var i=0;i<G.log.length;i++){html+='<div class="le '+(G.log[i].cls||"")+'">'+G.log[i].msg+'</div>';}
-  html+='</div>';
-  el.innerHTML=html;
-  window._ch=ch;
-}
-
+function newGame(){G={hp:100,sanity:100,moves:0,items:[],visited:{foyer:1},current:"foyer",log:[],ir:JSON.parse(JSON.stringify(IROOMS)),boss:Math.random()<.5?"cellar":"attic",saltUsed:0,dogs:[],people:[],end:null,clue:0};SAVE.runs=(SAVE.runs||0)+1;save();screen="game";render();}
+function trigEv(id){var e=EVS[id];if(!e)return;if(e.d)G.hp=Math.max(0,G.hp-e.d);if(e.f)G.sanity=Math.max(0,G.sanity-e.f);if(e.clue)G.clue=1;addLog(e.t,e.d||e.f>12?"le-bad":"le-warn");}
+function maybeJumpscare(callback){if(Math.random()<0.05){SAVE.scareCount=(SAVE.scareCount||0)+1;save();triggerScare(function(){G.sanity=Math.max(0,G.sanity-15);addLog("Something appeared in the dark. Your heart stops.","le-bad");checkAchievements();if(G.sanity<=0){addLog("Your mind shatters.","le-bad");endGame("insanity");return;}if(callback)callback();});}else{if(callback)callback();}}
+function checkSpecial(base){var win=base==="slay_beast"||base==="slay_wraith";if(win){if(G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0&&G.hp>=100)showAchievement("a_dog_survivor");if(G.hp>=100)return"full_hp";if(G.sanity>=100){showAchievement("a_sanity_steel");return"full_sanity";}if(G.hp<5)showAchievement("a_survived_low");if(G.hp<10)return"low_hp";if(G.items.indexOf("torch")>=0&&G.items.indexOf("crucifix")>=0)return"both_items";if(G.items.indexOf("lantern")>=0)return"lantern_win";if(G.items.indexOf("journal")>=0)return"journal_win";var ri=[];for(var i=0;i<G.items.length;i++){if(["noel","rudy","dan","lily"].indexOf(G.items[i])<0)ri.push(G.items[i]);}if(ri.length>=8)return"collector";if(Object.keys(G.visited).length>=ROOMS.length)return"explorer";if(G.moves<=14)return"speed_run";if(base==="slay_beast"&&G.moves<=5)return"speed_cellar";if(ri.length===1&&ri[0]==="knife")return"knife_only";}return base;}
+function buildChoices(){var r=rm(G.current);var ch=[];
+if(r.dog&&G.dogs.indexOf(r.dog)<0){(function(dog){var dn=dog==="noel"?"Noel":"Rudy";ch.push({t:"Call "+dn+" over - good boy!",c:"btn-dog",a:function(){G.dogs.push(dog);G.items.push(dog);G.moves++;var both=G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0;addLog(dn+" joins you!"+(both?" Noel and Rudy immediately become best friends.":""),"le-dog");checkAchievements();render();}});})(r.dog);}
+if(r.person&&G.people.indexOf(r.person)<0){(function(person){var pn=person==="dan"?"Dan":"Lily";var pd=person==="dan"?"He is terrified but willing to help.":"She looks surprisingly calm.";var pc=person==="dan"?"btn-dan":"btn-lily",lc=person==="dan"?"le-dan":"le-lily";ch.push({t:"Bring "+pn+" with you",c:pc,a:function(){G.people.push(person);G.items.push(person);G.moves++;addLog(pn+" joins you. "+pd,lc);checkAchievements();render();}});})(r.person);}
+var ri=G.ir[G.current]||[];for(var ii=0;ii<ri.length;ii++){(function(item){ch.push({t:"Pick up "+ITEMS[item].n,c:"btn-green",a:function(){G.items.push(item);G.ir[G.current]=G.ir[G.current].filter(function(x){return x!==item;});addLog("Found: "+ITEMS[item].n+" - "+ITEMS[item].d,"le-good");G.moves++;render();}});})(ri[ii]);}
+for(var ei=0;ei<r.ex.length;ei++){(function(ex){var d=rm(ex);if(!d)return;var boss=d.boss&&ex===G.boss;ch.push({t:"Go to "+(G.visited[ex]?d.n:"???")+(boss?" [MONSTER]":""),c:boss?"btn-danger":"",a:function(){moveTo(ex);}});})(r.ex[ei]);}
+if(r.esc){ch.push({t:"Flee through the back door",c:"btn-green",a:function(){var hD=G.people.indexOf("dan")>=0,hL=G.people.indexOf("lily")>=0;if(hD&&hL){addLog("Dan and Lily sprint out into the night.","le-dan");endGame("dan_escape");}else if(hD){addLog("Dan runs out beside you.","le-dan");endGame("dan_escape");}else if(hL){addLog("Lily leads the way out.","le-lily");endGame("lily_escape");}else endGame("flee");}});if(G.items.indexOf("rope")>=0)ch.push({t:"Rope-climb the hidden window",c:"btn-purple",a:function(){endGame("rope_escape");}});}
+if(r.boss&&G.current===G.boss){var bk=G.current==="cellar"?"cellar":"attic";var boss=BOSSES[bk];var real=[];for(var i=0;i<G.items.length;i++){if(["noel","rudy","dan","lily"].indexOf(G.items[i])<0)real.push(G.items[i]);}var hN=G.items.indexOf("noel")>=0,hR=G.items.indexOf("rudy")>=0;var hDan=G.people.indexOf("dan")>=0,hLily=G.people.indexOf("lily")>=0;
+if(hN&&hR&&real.length===0&&!hDan&&!hLily)ch.push({t:"Let Noel and Rudy handle this",c:"btn-dog",a:function(){addLog("Noel and Rudy approach. The monster hesitates.","le-dog");endGame("monster_pet");}});
+if(hN&&hR)ch.push({t:"Noel + Rudy - ATTACK TOGETHER!",c:"btn-dog",a:function(){addLog("Noel goes high Rudy goes low!","le-dog");showAchievement("a_dogs_fight");endGame("dogs_teamwork");}});
+else if(hN)ch.push({t:"Send Noel in!",c:"btn-dog",a:function(){addLog("Noel charges with a bark that shakes the walls!","le-dog");endGame("noel_rescue");}});
+else if(hR)ch.push({t:"Rudy - hold the line!",c:"btn-dog",a:function(){addLog("Rudy plants himself between you and the monster.","le-dog");endGame("rudy_guardian");}});
+if(hDan)ch.push({t:"Fight alongside Dan",c:"btn-dan",a:function(){if(real.length>0){addLog("Dan throws books while you strike!","le-dan");endGame("dan_fight");}else fightBoss(null);}});
+if(hLily)ch.push({t:"Fight alongside Lily",c:"btn-lily",a:function(){if(G.items.indexOf("crucifix")>=0){addLog("Lily raises the crucifix. She has done this before.","le-lily");endGame("lily_fight");}else fightBoss(null);}});
+for(var wi=0;wi<boss.weak.length;wi++){(function(w){if(G.items.indexOf(w)>=0)ch.push({t:"Use "+ITEMS[w].n+" against "+boss.n,c:"btn-purple",a:function(){fightBoss(w);}});})(boss.weak[wi]);}
+if(real.length===0&&!hN&&!hR&&!hDan&&!hLily)ch.push({t:"Fight bare-handed (no items!)",c:"btn-danger",a:function(){addLog("You charge with nothing but desperation.","le-bad");endGame("no_items");}});
+else ch.push({t:"Fight bare-handed",c:"btn-danger",a:function(){fightBoss(null);}});
+ch.push({t:"Run! Back the way you came",c:"",a:function(){moveTo(r.ex[0]);}});}
+if(G.items.indexOf("salt")>=0&&!G.saltUsed)ch.push({t:"Pour a salt circle",c:"btn-green",a:function(){var inBoss=rm(G.current).boss&&G.current===G.boss;G.saltUsed=1;G.sanity=Math.min(100,G.sanity+15);G.items=G.items.filter(function(i){return i!=="salt";});if(inBoss){endGame("salt_boss");return;}addLog("You pour a salt circle. The air calms. (+15 sanity)","le-good");render();}});
+if(G.items.indexOf("vial")>=0)ch.push({t:"Drink the vial",c:"btn-purple",a:function(){G.items=G.items.filter(function(i){return i!=="vial";});if(Math.random()<.5){G.hp=Math.min(100,G.hp+30);addLog("The liquid heals you. (+30 HP)","le-good");}else{G.hp=Math.max(0,G.hp-20);addLog("Poison! (-20 HP)","le-bad");if(G.hp<=0){endGame("poison");return;}}render();}});
+if(G.people.indexOf("dan")>=0&&G.items.indexOf("journal")>=0&&!SAVE.unlocked["dan_secret"])ch.push({t:"Show Dan the journal",c:"btn-dan",a:function(){addLog("Dan goes very quiet. I wrote that he says.","le-dan");endGame("dan_secret");}});
+if(G.people.indexOf("lily")>=0&&G.items.indexOf("lantern")>=0&&!SAVE.unlocked["lily_secret"]&&G.current==="ballroom")ch.push({t:"Hold the lantern to Lily's face",c:"btn-lily",a:function(){addLog("The light catches her face. She smiles not with relief.","le-lily");endGame("lily_secret");}});
+return ch;}
+function moveTo(dest){var d=rm(dest);if(!d)return;G.current=dest;G.moves++;var isNew=!G.visited[dest];G.visited[dest]=1;if(isNew){if(d.ev&&d.ev.length)trigEv(d.ev[Math.floor(Math.random()*d.ev.length)]);if(d.dog&&G.dogs.indexOf(d.dog)<0)addLog("You hear a dog - "+(d.dog==="noel"?"Noel":"Rudy")+" is in this room!","le-dog");if(d.person&&G.people.indexOf(d.person)<0)addLog("Someone is hiding here - "+(d.person==="dan"?"Dan":"Lily")+"!",d.person==="dan"?"le-dan":"le-lily");maybeJumpscare(function(){checkAchievements();if(G.hp<=0)endGame("death_hp");else if(G.sanity<=0){addLog("Your mind shatters.","le-bad");endGame("insanity");}else render();});return;}checkAchievements();if(G.hp<=0)endGame("death_hp");else if(G.sanity<=0){addLog("Your mind shatters.","le-bad");endGame("insanity");}else render();}
+function fightBoss(weapon){var bk=G.current==="cellar"?"cellar":"attic";var boss=BOSSES[bk];G.moves++;if(weapon&&boss.weak.indexOf(weapon)>=0){G.items=G.items.filter(function(i){return i!==weapon;});addLog(boss.win,"le-good");showAchievement("a_first_win");endGame(bk==="cellar"?"slay_beast":"slay_wraith");}else{var atk=boss.atk[Math.floor(Math.random()*boss.atk.length)];if(G.items.indexOf("amulet")>=0&&G.hp-atk.d<=0){G.items=G.items.filter(function(i){return i!=="amulet";});addLog("The amulet SHATTERS - absorbed a fatal blow!","le-good");G.sanity=Math.max(0,G.sanity-10);addLog(atk.t,"le-bad");if(G.sanity<=0){endGame("insanity");return;}endGame("amulet_used");return;}G.hp=Math.max(0,G.hp-atk.d);G.sanity=Math.max(0,G.sanity-10);addLog(atk.t,"le-bad");if(G.hp<=0){addLog(boss.lose,"le-bad");endGame("death_hp");}else if(G.sanity<=0){addLog("Your mind breaks.","le-bad");endGame("insanity");}else render();}}
+function endGame(raw){var fid=SKIP_IDS[raw]?raw:(checkSpecial(raw)||raw);G.end=fid;SAVE.unlocked[fid]=1;save();checkAchievements();screen="ending";render();}
+function buildMap(){var html='<div class="mgrid">';for(var i=0;i<ROOMS.length;i++){var r=ROOMS[i],v=G.visited[r.id],cur=G.current===r.id;var dH=r.dog&&v&&G.dogs.indexOf(r.dog)<0;var dnH=r.person==="dan"&&v&&G.people.indexOf("dan")<0;var lH=r.person==="lily"&&v&&G.people.indexOf("lily")<0;var cls=cur?"cur":dnH?"danr":lH?"lilyr":dH?"dogr":v?"vis":r.safe?"saf":"unk";var tip=cur?r.n:v?r.n+(dH?" - dog!":dnH?" - Dan!":lH?" - Lily!":""):"???";html+='<div class="rc '+cls+'" title="'+tip+'">'+(cur?"[*]":r.ic)+'</div>';}return html+'</div>';}
+function catRow(e){var got=SAVE.unlocked[e.id];var isDog=e.cat==="dog",isDan=e.cat==="dan",isLily=e.cat==="lily";var isSec=e.cat==="secret"&&!got;var eiC=got?(isDog?"ei ei-dog":isDan?"ei ei-dan":isLily?"ei ei-lily":"ei"):"ei ei-lock";var enC=got?(isDog?"en en-dog":isDan?"en en-dan":isLily?"en en-lily":"en"):"en en-lock";var ebC=got?(isDog?"eb eb-dog":isDan?"eb eb-dan":isLily?"eb eb-lily":"eb"):"eb eb-lock";return'<div class="er"><div class="'+eiC+'">'+(got?e.i:"?")+'</div><div style="flex:1;min-width:0"><div class="'+enC+'">'+(isSec?"???":e.l)+'</div><div class="'+(got?"ed":"ed ed-lock")+'">'+(got?e.cond:isSec?"Keep exploring...":e.cond)+'</div></div><span class="'+ebC+'">'+(got?"found":"locked")+'</span></div>';}
+function renderMenu(){var tot=ALL.length,unl=Object.keys(SAVE.unlocked).length,rem=tot-unl,pct=Math.round(unl/tot*100);var achUnl=Object.keys(SAVE.achievements).length,achTot=ACHIEVEMENTS.length;var cc={};for(var i=0;i<ALL.length;i++){cc[ALL[i].cat]=(cc[ALL[i].cat]||0)+1;}var filt=jf==="achievements"?null:jf==="all"?ALL:ALL.filter(function(e){return e.cat===jf;});var fhtml='<div class="cfilter"><div class="cf '+(jf==="all"?"cf-active":"")+'" onclick="jf=\'all\';render()">All ('+tot+')</div>';for(var i=0;i<CATS_DATA.length;i++){var c=CATS_DATA[i];fhtml+='<div class="cf '+(jf===c.id?"cf-active":"")+'" onclick="jf=\''+c.id+'\';render()">'+c.l+(cc[c.id]?" ("+cc[c.id]+")":"")+'</div>';}fhtml+='<div class="cf '+(jf==="achievements"?"cf-active":"")+'" onclick="jf=\'achievements\';render()">Achievements ('+achTot+')</div></div>';var rows="";if(jf==="achievements"){for(var i=0;i<ACHIEVEMENTS.length;i++){var a=ACHIEVEMENTS[i],got=SAVE.achievements[a.id],hidden=a.secret&&!got;rows+='<div class="er"><div class="'+(got?"ei ei-achiev":"ei ei-achiev-lock")+'">'+(got?a.icon:"?")+'</div><div style="flex:1;min-width:0"><div class="'+(got?"en en-achiev":"en en-lock")+'">'+(hidden?"???":a.l)+'</div><div class="'+(got?"ed":"ed ed-lock")+'">'+(hidden?"Keep exploring...":a.desc)+'</div></div><span class="'+(got?"eb eb-achiev":"eb eb-lock")+'">'+(got?"unlocked":"locked")+'</span></div>';}}else{for(var i=0;i<(filt||[]).length;i++){rows+=catRow(filt[i]);}}
+return'<div class="title">Manor of Dread</div><div class="subtitle">a haunted survival game &mdash; '+tot+' endings</div><div class="castline"><span style="color:#4080C0">Noel <span class="wag">~</span> &nbsp; Rudy <span class="wag" style="animation-delay:.2s">~</span></span>&nbsp;&nbsp;&nbsp;<span style="color:#20906a">Dan</span>&nbsp;&nbsp;<span style="color:#C04070">Lily</span></div><button class="btn btn-prim" onclick="newGame()">Enter the manor</button>'+(SAVE.runs>0?'<p style="font-size:11px;color:#9a8060;margin-bottom:10px">total runs: '+SAVE.runs+'</p>':'')+'<div class="dc"><div style="display:flex;gap:12px"><div style="flex:1"><div class="rl">endings</div><div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px"><span style="font-size:20px;font-weight:bold;color:#EF9F27">'+unl+'</span><span style="font-size:12px;color:#9a8060">/ '+tot+'</span></div><div class="pw"><div class="pi" style="width:'+pct+'%"></div></div></div><div style="flex:1"><div class="rl">achievements</div><div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px"><span style="font-size:20px;font-weight:bold;color:#AFA9EC">'+achUnl+'</span><span style="font-size:12px;color:#9a8060">/ '+achTot+'</span></div><div class="pw"><div class="pi" style="width:'+Math.round(achUnl/achTot*100)+'%;background:#604890"></div></div></div></div><div style="font-size:12px;color:#9a8060;margin-top:8px">'+(rem>0?rem+' ending'+(rem>1?"s":"")+" still to find.":"All endings found. The manor has no more secrets.")+'</div></div><div class="dc"><div class="rl" style="margin-bottom:8px">journal &amp; achievements</div>'+(!ready?'<div style="font-size:13px;color:#9a8060;padding:8px 0"><span class="spin"></span>Generating more endings from the dark...</div>':fhtml)+'<div class="jscroll">'+rows+'</div></div>';}
+function renderEnding(){var e=null;for(var i=0;i<ALL.length;i++){if(ALL[i].id===G.end){e=ALL[i];break;}}if(!e){screen="menu";render();return;}var cat=catSt(e.cat),tot=ALL.length,unl=Object.keys(SAVE.unlocked).length,achUnl=Object.keys(SAVE.achievements).length;var survivors=[];if(G.people.indexOf("dan")>=0)survivors.push("Dan made it out.");if(G.people.indexOf("lily")>=0)survivors.push("Lily made it out.");if(G.dogs.indexOf("noel")>=0)survivors.push("Noel made it out. Good boy.");if(G.dogs.indexOf("rudy")>=0)survivors.push("Rudy made it out. Absolute unit.");return'<div class="ecard" style="background:'+cat.bg+';border:1px solid '+cat.b+'"><span class="catb" style="background:'+cat.bg+';border:1px solid '+cat.b+';color:'+cat.c+'">'+cat.l+'</span><div style="font-size:18px;font-weight:bold;color:'+cat.c+';margin-bottom:8px">'+e.l+'</div><div style="font-size:13px;line-height:1.9;color:#e8d5b0">'+e.desc+'</div>'+(survivors.length?'<div style="margin-top:10px;font-size:12px;color:#9a8060;line-height:1.8">'+survivors.join("<br>")+'</div>':'')+'<div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap"><div><div class="sl">health</div><div style="font-size:15px;font-weight:bold;color:#f0e0c0">'+Math.round(G.hp)+'%</div></div><div><div class="sl">sanity</div><div style="font-size:15px;font-weight:bold;color:#f0e0c0">'+Math.round(G.sanity)+'%</div></div><div><div class="sl">moves</div><div style="font-size:15px;font-weight:bold;color:#f0e0c0">'+G.moves+'</div></div></div></div><div class="dc"><div style="display:flex;gap:12px"><div style="flex:1"><div class="rl">endings</div><div style="display:flex;align-items:baseline;gap:6px;margin:3px 0"><span style="font-size:18px;font-weight:bold;color:#EF9F27">'+unl+'</span><span style="font-size:12px;color:#9a8060">/ '+tot+'</span></div><div class="pw"><div class="pi" style="width:'+Math.round(unl/tot*100)+'%"></div></div></div><div style="flex:1"><div class="rl">achievements</div><div style="display:flex;align-items:baseline;gap:6px;margin:3px 0"><span style="font-size:18px;font-weight:bold;color:#AFA9EC">'+achUnl+'</span><span style="font-size:12px;color:#9a8060">/ '+ACHIEVEMENTS.length+'</span></div><div class="pw"><div class="pi" style="width:'+Math.round(achUnl/ACHIEVEMENTS.length*100)+'%;background:#604890"></div></div></div></div><div style="font-size:12px;color:#9a8060;margin-top:6px">'+(tot-unl>0?(tot-unl)+' ending'+(tot-unl>1?"s":"")+" left to find.":"All endings found!")+'</div></div><div class="choices"><button class="btn" onclick="newGame()">Play again</button><button class="btn btn-green" onclick="screen=\'menu\';render()">View journal</button></div>';}
+function render(){var el=document.getElementById("main");if(screen==="menu"){el.innerHTML=renderMenu();return;}if(screen==="ending"){el.innerHTML=renderEnding();return;}var r=rm(G.current),ch=buildChoices();var isBoss=r.boss&&G.current===G.boss;var boss=isBoss?(G.current==="cellar"?BOSSES.cellar:BOSSES.attic):null;var nH=r.dog==="noel"&&G.dogs.indexOf("noel")<0;var rH=r.dog==="rudy"&&G.dogs.indexOf("rudy")<0;var dH=r.person==="dan"&&G.people.indexOf("dan")<0;var lH=r.person==="lily"&&G.people.indexOf("lily")<0;var bD=G.dogs.indexOf("noel")>=0&&G.dogs.indexOf("rudy")>=0;var bP=G.people.indexOf("dan")>=0&&G.people.indexOf("lily")>=0;var html='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:11px;color:#9a8060;text-transform:uppercase;letter-spacing:.06em">manor of dread</span><button class="btn" style="width:auto;padding:4px 12px;font-size:11px" onclick="screen=\'menu\';render()">menu</button></div><div class="dc"><div class="rl">current room</div><div style="font-size:15px;font-weight:bold;color:#EF9F27;margin-bottom:4px">'+r.n+'</div>'+(isBoss?'<div style="font-size:12px;color:#C04030;margin-bottom:6px;font-weight:bold">- '+boss.n+' is here -</div>':'')+(nH?'<div class="dogbanner">A golden retriever watches from under the cot tail thumping the floorboards. <span class="wag">~</span></div>':'')+(rH?'<div class="dogbanner">A scruffy terrier stands in the shadows growling at something only it can sense. <span class="wag">~</span></div>':'')+(dH?'<div class="danbanner">A man crouches behind the bookshelf wide-eyed and clutching a stack of books.</div>':'')+(lH?'<div class="lilybanner">A young woman stands perfectly still in the center of the room eyes closed listening.</div>':'')+(bD&&!isBoss?'<div style="font-size:11px;color:#4080C0;margin-bottom:8px">Noel <span class="wag" style="display:inline-block">~</span> and Rudy <span class="wag" style="display:inline-block;animation-delay:.2s">~</span> are with you.</div>':'')+(bP&&!isBoss?'<div style="font-size:11px;color:#9a8060;margin-bottom:8px"><span style="color:#20906a">Dan</span> and <span style="color:#C04070">Lily</span> are with you.</div>':'')+'<div style="font-size:13px;line-height:1.85;color:#e8d5b0;margin-bottom:8px">'+(isBoss?'<span style="color:#F09595">'+boss.desc+'</span><br><br>':"")+r.desc+'</div>'+(G.clue?'<div style="background:#100820;border:1px solid #504890;border-radius:6px;padding:8px 12px;font-size:12px;color:#AFA9EC;font-style:italic">Clue: The circled room on the map - something important is hidden there.</div>':'')+'</div><div class="sbar"><div class="sb"><div class="sl">health</div><div class="sv">'+Math.round(G.hp)+'%</div><div class="bw"><div class="bf" style="width:'+G.hp+'%;background:'+hpC()+'"></div></div></div><div class="sb"><div class="sl">sanity</div><div class="sv">'+Math.round(G.sanity)+'%</div><div class="bw"><div class="bf" style="width:'+G.sanity+'%;background:'+snC()+'"></div></div></div><div class="sb"><div class="sl">moves</div><div class="sv">'+G.moves+'</div></div></div><div style="margin-bottom:8px;min-height:22px">';
+if(G.items.length===0){html+='<span style="font-size:11px;color:#3a2810">no items</span>';}else{for(var i=0;i<G.items.length;i++){var itm=ITEMS[G.items[i]];html+='<span class="tag '+(itm?itm.t||"":"")+'" title="'+(itm?itm.d||"":"")+'">'+(itm?itm.n:G.items[i])+'</span>';}}
+html+='</div><div class="rl" style="margin-bottom:4px">map <span style="font-size:9px;color:#9a8060">- <span style="color:#4080C0">blue</span>=dog <span style="color:#20906a">green</span>=Dan <span style="color:#C04070">pink</span>=Lily</span></div>'+buildMap()+'<div class="choices">';
+for(var i=0;i<ch.length;i++){html+='<button class="btn '+(ch[i].c||"")+'" onclick="C('+i+')">'+ch[i].t+'</button>';}
+html+='</div><div class="log">';for(var i=0;i<G.log.length;i++){html+='<div class="le '+(G.log[i].cls||"")+'">'+G.log[i].msg+'</div>';}html+='</div>';
+el.innerHTML=html;window._ch=ch;}
 window.C=function(i){var c=window._ch[i];if(c)c.a();};
 genEndings();render();
 </script>
