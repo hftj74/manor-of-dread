@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manor of Dread</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:monospace;background:#0d0a06;color:#c8b89a;padding:16px;min-height:100vh;max-width:600px;margin:0 auto}
+.dc{background:#120d07;border:1px solid #2e1f0e;border-radius:8px;padding:16px;margin-bottom:10px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border:1px solid #854F0B;border-radius:4px;margin:2px;background:#231508;color:#FAC775}
+.tag-dog{border-color:#185FA5;background:#080f18;color:#85B7EB}
+.tag-c{border-color:#27500A;background:#0a1a0a;color:#C0DD97}
+.tag-k{border-color:#534AB7;background:#1a0a1a;color:#CECBF6}
+.tag-d{border-color:#A32D2D;background:#1a0a08;color:#F7C1C1}
+.sbar{display:flex;gap:8px;margin-bottom:12px}
+.sb{background:#0a0804;border-radius:6px;padding:8px 12px;flex:1}
+.sl{font-size:10px;color:#7a6a50;text-transform:uppercase;letter-spacing:.05em}
+.sv{font-size:15px;font-weight:bold;color:#e8d8b8;margin-top:2px}
+.bw{background:#1a1008;border-radius:99px;height:5px;margin-top:4px}
+.bf{height:5px;border-radius:99px}
+.mgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-bottom:12px}
+.rc{border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;border:1px solid transparent;aspect-ratio:1;font-family:monospace}
+.vis{background:#1a1008;border-color:#2e1f0e;color:#7a6a50}
+.cur{background:#2e1a06;border-color:#EF9F27;color:#EF9F27;font-weight:bold}
+.unk{background:#0a0804;border-color:#1a1208;color:#1a1208}
+.saf{background:#0a150a;border-color:#1e3a1e;color:#3a6a3a}
+.dog{background:#080f18;border-color:#185FA5;color:#85B7EB;font-weight:bold}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.btn{background:#120d07;border:1px solid #2e1f0e;border-radius:6px;padding:9px 10px;font-size:12px;color:#c8b89a;cursor:pointer;text-align:left;font-family:monospace;line-height:1.4;width:100%}
+.btn:hover{border-color:#EF9F27;color:#EF9F27}
+.btn-danger{border-color:#3a1010}
+.btn-green{border-color:#1e3a1e}
+.btn-purple{border-color:#3a2a60}
+.btn-dog{border-color:#185FA5;color:#85B7EB}
+.btn-dog:hover{border-color:#85B7EB;color:#B5D4F4}
+.btn-prim{border-color:#854F0B;color:#EF9F27;display:block;width:100%;padding:12px;margin-bottom:8px;font-size:14px}
+.log{background:#0a0804;border-radius:6px;padding:8px 12px;max-height:80px;overflow-y:auto;margin-top:8px}
+.le{font-size:11px;line-height:1.6;color:#7a6a50}
+.le-bad{color:#A32D2D}.le-good{color:#3B6D11}.le-warn{color:#BA7517}.le-dog{color:#378ADD}
+.pw{background:#1a1008;border-radius:99px;height:7px;margin:6px 0}
+.pi{height:7px;border-radius:99px;background:#854F0B}
+.er{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #1a1208}
+.er:last-child{border-bottom:none}
+.ei{width:26px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;background:#1a1008;border:1px solid #854F0B;color:#FAC775}
+.ei-lock{background:#0a0804;border-color:#1a1208;color:#1a1208}
+.ei-dog{background:#080f18;border-color:#185FA5;color:#85B7EB}
+.en{font-size:12px;font-weight:bold;color:#e8d8b8}
+.en-lock{color:#2e1f0e}
+.en-dog{color:#B5D4F4}
+.ed{font-size:11px;color:#7a6a50}
+.ed-lock{color:#1e1408}
+.eb{font-size:10px;padding:2px 7px;border-radius:4px;margin-left:auto;flex-shrink:0;background:#0a150a;border:1px solid #27500A;color:#C0DD97}
+.eb-lock{background:#0a0804;border-color:#1a1208;color:#1e1408}
+.eb-dog{background:#080f18;border-color:#185FA5;color:#85B7EB}
+.cfilter{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.cf{background:#120d07;border:1px solid #2e1f0e;border-radius:99px;padding:3px 10px;font-size:11px;color:#7a6a50;cursor:pointer}
+.cf-active{border-color:#854F0B;color:#EF9F27}
+.jscroll{max-height:340px;overflow-y:auto}
+.ecard{border-radius:8px;padding:16px;margin-bottom:10px}
+.catb{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin-bottom:8px}
+.dogbanner{background:#080f18;border:1px solid #185FA5;border-radius:6px;padding:8px 12px;font-size:12px;color:#85B7EB;margin-bottom:10px;line-height:1.6}
+.wag{display:inline-block;animation:wag .45s ease-in-out infinite alternate}
+@keyframes wag{from{transform:rotate(-18deg)}to{transform:rotate(18deg)}}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid #3a2a10;border-top-color:#EF9F27;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rl{font-size:10px;color:#7a6a50;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.title{font-size:24px;font-weight:bold;color:#EF9F27;letter-spacing:.04em;text-align:center;margin-bottom:4px}
+.subtitle{font-size:12px;color:#7a6a50;text-align:center;letter-spacing:.06em;margin-bottom:6px}
+.dogline{font-size:11px;color:#378ADD;text-align:center;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div id="main"></div>
+<script>
+const CATS=[
+  {id:"victory",l:"Victory",c:"#639922",bg:"#0a1a08",b:"#3B6D11"},
+  {id:"escape",l:"Escape",c:"#EF9F27",bg:"#120d07",b:"#BA7517"},
+  {id:"death",l:"Death",c:"#E24B4A",bg:"#1a0808",b:"#A32D2D"},
+  {id:"madness",l:"Madness",c:"#AFA9EC",bg:"#0a0818",b:"#534AB7"},
+  {id:"secret",l:"Secret",c:"#5DCAA5",bg:"#04180f",b:"#0F6E56"},
+  {id:"cursed",l:"Cursed",c:"#D4537E",bg:"#180a10",b:"#993556"},
+  {id:"neutral",l:"Bittersweet",c:"#85B7EB",bg:"#080f1a",b:"#185FA5"},
+  {id:"dog",l:"Good Boys",c:"#85B7EB",bg:"#080f18",b:"#185FA5"},
+];
+
+const CORE=[
+  {id:"slay_beast",l:"Beast Slayer",cat:"victory",i:"*",cond:"Defeat the Cellar Beast with the torch",desc:"You thrust the torch into its chest. Fire takes it. The beast collapses into ash and silence."},
+  {id:"slay_wraith",l:"Wraith Banisher",cat:"victory",i:"t",cond:"Defeat the Attic Wraith with the crucifix",desc:"The crucifix burns bright. The wraith contorts and dissolves into cold mist."},
+  {id:"flee",l:"The Coward's Path",cat:"escape",i:"~",cond:"Escape through the back door",desc:"You bolt into the cold night. The monster still walks the halls. You survived — but at what cost?"},
+  {id:"rope_escape",l:"Window Jumper",cat:"escape",i:"^",cond:"Use the rope to find the hidden window",desc:"You tie the rope to a beam and drop from the window. Your feet hit the ground. The manor can't follow."},
+  {id:"insanity",l:"Lost Mind",cat:"madness",i:"?",cond:"Let your sanity reach zero",desc:"The darkness was inside you all along. Your mind shatters. You wander the halls forever."},
+  {id:"poison",l:"Bitter Medicine",cat:"death",i:"!",cond:"Drink the vial and receive poison",desc:"The vial was poison. Your vision blurs. You sink to the floor. The manor doesn't need the monster for all its victims."},
+  {id:"salt_boss",l:"The Ritual Seal",cat:"secret",i:"o",cond:"Pour salt in the boss room",desc:"You pour the salt in a wide circle. The creature recoils. You walk to the door. Something has been contained — for now."},
+  {id:"both_items",l:"Prepared",cat:"secret",i:"+",cond:"Carry both torch and crucifix into battle",desc:"You were ready for anything. The monster never stood a chance."},
+  {id:"full_hp",l:"Untouched",cat:"secret",i:"8",cond:"Win with 100% HP remaining",desc:"The manor never laid a hand on you. Impossible — yet here you are."},
+  {id:"low_hp",l:"Barely Breathing",cat:"victory",i:".",cond:"Win with under 10% HP",desc:"You were one step from death. You took it anyway. Somehow that was enough."},
+  {id:"full_sanity",l:"Unbroken",cat:"secret",i:"=",cond:"Win with 100% sanity remaining",desc:"The manor tried to break your mind. It failed completely."},
+  {id:"collector",l:"The Collector",cat:"secret",i:"#",cond:"Carry 8 or more items in one run",desc:"Every item in the manor, all at once. You left nothing behind."},
+  {id:"speed_run",l:"In and Out",cat:"secret",i:">",cond:"Win in under 15 moves",desc:"You didn't explore. You didn't linger. You solved it fast and walked away."},
+  {id:"explorer",l:"Every Room",cat:"neutral",i:"@",cond:"Visit all 17 rooms before winning",desc:"You mapped every corner of this cursed place before you ended it."},
+  {id:"lantern_win",l:"Light in Dark",cat:"victory",i:"l",cond:"Win while carrying the lantern",desc:"The lantern kept the worst of the dark at bay. You carried light into the abyss."},
+  {id:"journal_win",l:"The Archivist",cat:"victory",i:"j",cond:"Win while carrying the journal",desc:"You read the manor's history. It told you exactly how to end things."},
+  {id:"amulet_used",l:"Last Resort",cat:"cursed",i:"a",cond:"Let the amulet absorb a fatal blow",desc:"Death came for you. The amulet shattered. That was its entire purpose — and it fulfilled it."},
+  {id:"no_items",l:"Empty Hands",cat:"death",i:"x",cond:"Fight the boss with zero items",desc:"Bare hands against a monster. Brave and foolish — the same thing, in the end."},
+  {id:"speed_cellar",l:"Straight Down",cat:"secret",i:"v",cond:"Reach the cellar in 5 moves or fewer",desc:"You went straight for the basement. No detours. No fear. The manor hadn't even started haunting you."},
+  {id:"knife_only",l:"Steel Nerve",cat:"cursed",i:"k",cond:"Carry only the knife when fighting the boss",desc:"You brought a knife to a monster fight. The sheer audacity carried you through."},
+  {id:"noel_rescue",l:"Noel to the Rescue",cat:"dog",i:"N",cond:"Find Noel in the nursery, bring him to the boss",desc:"Noel bursts from under the nursery cot — tail thrashing, utterly unafraid. He charges the monster with a bark that shakes the rafters. You run. You both make it out. Noel trots ahead into the moonlight like he owns the night, which he does."},
+  {id:"rudy_guardian",l:"Rudy Holds the Line",cat:"dog",i:"R",cond:"Find Rudy in the cellar, escape while he guards",desc:"A scruffy terrier materialises from the cellar dark — Rudy, growling low and steady at the creature. He plants himself between you and the beast. You back toward the stairs. He comes bounding up three minutes later, no worse for wear, tail going like a helicopter."},
+  {id:"both_dogs",l:"The Pack",cat:"secret",i:"W",cond:"Find both Noel and Rudy and escape together",desc:"Noel and Rudy find each other before you do. A golden retriever and a scruffy terrier, wrestling in the hallway like the manor is a perfectly normal place to play. Together they face down the monster while you escape. They catch up. Of course they do."},
+  {id:"monster_pet",l:"He Just Needed a Friend",cat:"secret",i:"&",cond:"Bring both dogs to the boss with zero weapons",desc:"You arrive weaponless, flanked by Noel and Rudy. The monster looms — then stops. Noel wags. Rudy offers a paw. Something ancient and terrible makes a sound no one expected: a low, rumbling whimper. The three of them curl up together. You tiptoe out into the night, profoundly moved."},
+];
+
+let SAVE={unlocked:{},runs:0,gen:null};
+try{const s=localStorage.getItem("manor_v5");if(s)SAVE=JSON.parse(s);}catch(e){}
+function save(){try{localStorage.setItem("manor_v5",JSON.stringify(SAVE));}catch(e){}}
+
+let ALL=[...CORE];
+let ready=false;
+let genRunning=false;
+let screen="menu";
+let jf="all";
+let G={};
+
+async function genEndings(){
+  if(genRunning)return;
+  if(SAVE.gen&&SAVE.gen.length>0){
+    const ids=new Set(CORE.map(e=>e.id));
+    ALL=[...CORE,...SAVE.gen.filter(e=>!ids.has(e.id))];
+    ready=true;if(screen==="menu")render();return;
+  }
+  genRunning=true;
+  const taken=CORE.map(e=>e.id).join(",");
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:7000,messages:[{role:"user",content:`Design 76 more endings for horror game "Manor of Dread". Players explore a manor, collect items (torch,lantern,crucifix,knife,iron_key,journal,salt,amulet,vial,rope), manage HP and sanity, fight The Cellar Beast (weak: torch) or Attic Wraith (weak: crucifix/salt). Two dogs: Noel (golden retriever, nursery) and Rudy (terrier, cellar). IDs used: ${taken}. Make exactly 76 endings as JSON array, each: {id,l,cat,i,cond,desc}. cat: victory/escape/death/madness/secret/cursed/neutral. i: single ASCII char. cond: under 12 words. desc: 1-2 sentences, atmospheric. Vary categories heavily. Return ONLY the JSON array.`}]})
+    });
+    const data=await res.json();
+    const txt=data.content.map(b=>b.text||"").join("");
+    const clean=txt.replace(/```json|```/g,"").trim();
+    const parsed=JSON.parse(clean);
+    const ids=new Set(CORE.map(e=>e.id));
+    const filtered=parsed.filter(e=>!ids.has(e.id)).slice(0,76);
+    SAVE.gen=filtered;
+    ALL=[...CORE,...filtered];
+    ready=true;save();
+  }catch(e){ready=true;}
+  genRunning=false;
+  if(screen==="menu")render();
+}
+
+const ROOMS=[
+  {id:"foyer",n:"Grand foyer",ic:"[F]",safe:1,desc:"The entrance hall. A cracked mirror reflects something that isn't you. Three archways stretch into darkness.",ev:[],ex:["hallway","parlor","cellar_stair"]},
+  {id:"hallway",n:"East hallway",ic:"[H]",desc:"A long corridor. Portraits watch you. Sconces flicker and die.",ev:["portraits_move","floor_creak"],ex:["library","kitchen","nursery","foyer"]},
+  {id:"parlor",n:"Parlor",ic:"[P]",desc:"Red velvet chairs around a cold fireplace. A chess set mid-game. Someone was just here.",ev:["chess_move","cold_breath"],ex:["foyer","study","dining_room"]},
+  {id:"library",n:"Library",ic:"[L]",desc:"Towering bookshelves in shadow. A ladder knocked over. One book open on the floor.",ev:["book_open","shelf_fall"],ex:["hallway","secret_passage","study"]},
+  {id:"study",n:"Study",ic:"[S]",desc:"A locked desk. Maps on the wall — one room circled in red ink: DO NOT ENTER.",ev:["desk_locked","map_clue"],ex:["library","parlor","attic_stair"]},
+  {id:"kitchen",n:"Kitchen",ic:"[K]",desc:"The smell of decay. Pots boil on a cold stove with nothing in them.",ev:["boiling_pots","scratching"],ex:["hallway","larder","cellar_stair"]},
+  {id:"larder",n:"Larder",ic:"[Ld]",desc:"Rotting preserves. Whatever was locked inside broke the lock from within.",ev:["jar_break","thing_inside"],ex:["kitchen"]},
+  {id:"dining_room",n:"Dining room",ic:"[D]",desc:"A table set for twelve. Food still steaming. Chairs scraped back mid-meal.",ev:["chairs_scrape","candles"],ex:["parlor","ballroom","cellar_stair"]},
+  {id:"ballroom",n:"Ballroom",ic:"[B]",desc:"An enormous dark room. A waltz plays from nowhere. Shadows dance with no source.",ev:["music_plays","shadow_dance"],ex:["dining_room","servants_hall"]},
+  {id:"servants_hall",n:"Servants hall",ic:"[Sv]",desc:"Cramped quarters. Beds still made. A service bell rings — labeled with your name.",ev:["bell_rings"],ex:["ballroom","cellar_stair","outside_door"]},
+  {id:"outside_door",n:"Back door",ic:"[O]",safe:1,desc:"A heavy bolt. You could escape — but the monster still roams inside.",ev:[],ex:["servants_hall"],esc:1},
+  {id:"nursery",n:"Nursery",ic:"[N]",desc:"Toys in a circle. A rocking horse moves on its own. Under the cot, a tail thumps the floorboards.",ev:["toys_move","rocking_horse"],ex:["hallway","attic_stair"],dog:"noel"},
+  {id:"attic_stair",n:"Attic stairs",ic:"[As]",desc:"Steep narrow stairs. The air grows colder with each step upward.",ev:["cold_air"],ex:["study","nursery","attic"]},
+  {id:"attic",n:"Attic",ic:"[Ac]",desc:"Old trunks. A ritual circle in chalk on the floor. This is where it started.",ev:["ritual_circle","chest_locked"],ex:["attic_stair"],boss:1},
+  {id:"cellar_stair",n:"Cellar stairs",ic:"[Cs]",desc:"Stone steps into absolute dark. The cold is oppressive. Something moves below.",ev:["cold_breath","scraping"],ex:["kitchen","foyer","dining_room","servants_hall","cellar"]},
+  {id:"cellar",n:"Cellar",ic:"[Ce]",desc:"A vast stone vault. Chains from the ceiling. In the shadows — a small dog growling at something only it can sense.",ev:[],ex:["cellar_stair"],boss:1,dog:"rudy"},
+  {id:"secret_passage",n:"Secret passage",ic:"[Sp]",desc:"A hidden corridor behind the bookshelf. Scratches on the wall: IT SEES THROUGH WALLS.",ev:["scratches"],ex:["library","attic","cellar"]},
+];
+
+const ITEMS={
+  torch:{n:"torch",t:"",d:"Fire damage. Effective vs the Cellar Beast."},
+  lantern:{n:"lantern",t:"",d:"Carries calming light through the dark."},
+  crucifix:{n:"crucifix",t:"tag-c",d:"Repels the Attic Wraith."},
+  knife:{n:"knife",t:"",d:"Light weapon. Weak vs major monsters."},
+  iron_key:{n:"iron key",t:"tag-k",d:"Opens locked furniture and doors."},
+  journal:{n:"journal",t:"tag-k",d:"Reveals the manor history and boss weaknesses."},
+  salt:{n:"salt",t:"tag-c",d:"Creates a protective circle. Restores sanity."},
+  amulet:{n:"amulet",t:"tag-c",d:"Absorbs one fatal hit. Shatters on use."},
+  vial:{n:"vial",t:"tag-d",d:"Heal or poison — unknown until drunk."},
+  rope:{n:"rope",t:"",d:"Reveals alternate escape routes."},
+  noel:{n:"Noel",t:"tag-dog",d:"A golden retriever. He will not leave your side."},
+  rudy:{n:"Rudy",t:"tag-dog",d:"A scruffy terrier. Absolute unit."},
+};
+
+const IROOMS={kitchen:["knife"],larder:["salt"],library:["journal","lantern"],study:["iron_key"],nursery:["amulet"],dining_room:["vial"],ballroom:["rope"],servants_hall:["torch"],secret_passage:["crucifix"]};
+
+const EVS={
+  portraits_move:{t:"The portraits' eyes shift to follow you.",d:0,f:8},
+  floor_creak:{t:"A floorboard CRACKS. Something in the walls goes quiet.",d:0,f:12},
+  chess_move:{t:"A chess piece slides on its own.",d:0,f:10},
+  cold_breath:{t:"Your breath fogs. Something unseen exhales in your ear.",d:5,f:15},
+  book_open:{t:"A book flips to a page on fatal invocations.",d:0,f:6},
+  shelf_fall:{t:"A shelf collapses toward you — you dodge, barely.",d:12,f:5},
+  desk_locked:{t:"The desk rattles violently then goes still.",d:0,f:8},
+  map_clue:{t:"You study the circled room. Something important is there.",d:0,f:0,clue:1},
+  boiling_pots:{t:"Scalding steam burns your arm.",d:10,f:0},
+  scratching:{t:"Rhythmic scratching from inside the walls.",d:0,f:18},
+  jar_break:{t:"A jar shatters on the floor.",d:5,f:5},
+  thing_inside:{t:"Whatever was locked in here left claw marks on the ceiling.",d:0,f:20},
+  chairs_scrape:{t:"Every chair scrapes back in unison. No one is seated.",d:0,f:14},
+  candles:{t:"All candles blow out at once. Three heartbeats of total darkness.",d:0,f:16},
+  music_plays:{t:"The music stops on a single discordant note.",d:0,f:12},
+  shadow_dance:{t:"One shadow doesn't match anything in the room. It looks at you.",d:0,f:20},
+  bell_rings:{t:"A service bell rings — labeled with your name.",d:0,f:25},
+  toys_move:{t:"The toys rearrange into an arrow pointing down.",d:0,f:18},
+  rocking_horse:{t:"The rocking horse stops, facing you directly.",d:0,f:12},
+  cold_air:{t:"The temperature drops 20 degrees in an instant.",d:5,f:10},
+  ritual_circle:{t:"The chalk circle begins to glow faintly. Do not step inside.",d:0,f:15},
+  chest_locked:{t:"A chest rattles from inside. Something wants out.",d:0,f:18},
+  scraping:{t:"Something enormous dragging itself across stone.",d:0,f:20},
+  scratches:{t:"The scratches read: IT SEES THROUGH WALLS.",d:0,f:18},
+};
+
+const BOSSES={
+  cellar:{n:"The Cellar Beast",weak:["torch"],desc:"A massive creature of bone and shadow. Its breath turns the air black.",
+    atk:[{t:"It swipes with a claw the size of a door.",d:30},{t:"It ROARS — the sound alone cracks your ribs.",d:20},{t:"It grabs you and squeezes.",d:35}],
+    win:"You thrust the torch into its chest. It shrieks. Fire takes it. The beast collapses into ash.",
+    lose:"The darkness swallows you whole."},
+  attic:{n:"The Attic Wraith",weak:["crucifix","salt"],desc:"A pale figure with no feet, hovering over the ritual circle. It screams without sound.",
+    atk:[{t:"It passes through you — icy cold fills your lungs.",d:22},{t:"It shows you a vision of your worst fear.",d:28},{t:"It shrieks and cracks the floorboards beneath you.",d:18}],
+    win:"You press the crucifix forward. The wraith contorts and dissolves into cold mist.",
+    lose:"You become part of the ritual. Another portrait for the hallway."},
+};
+
+function rm(id){return ROOMS.find(r=>r.id===id)}
+function catS(id){return CATS.find(c=>c.id===id)||CATS[0]}
+function log(msg,cls){G.log.unshift({msg,cls});if(G.log.length>12)G.log.pop();}
+function hpC(){return G.hp>50?"#639922":G.hp>25?"#EF9F27":"#E24B4A"}
+function snC(){return G.sanity>60?"#639922":G.sanity>30?"#EF9F27":"#E24B4A"}
+
+function newGame(){
+  G={hp:100,sanity:100,moves:0,items:[],visited:{foyer:1},current:"foyer",log:[],
+    ir:JSON.parse(JSON.stringify(IROOMS)),
+    boss:Math.random()<.5?"cellar":"attic",
+    saltUsed:0,dogs:[],end:null};
+  SAVE.runs=(SAVE.runs||0)+1;save();
+  screen="game";render();
+}
+
+function trigEv(id){
+  const e=EVS[id];if(!e)return;
+  if(e.d)G.hp=Math.max(0,G.hp-e.d);
+  if(e.f)G.sanity=Math.max(0,G.sanity-e.f);
+  if(e.clue)G.clue=1;
+  log(e.t,e.d||e.f>15?"le-bad":"le-warn");
+}
+
+function checkSpecial(base){
+  const win=base==="slay_beast"||base==="slay_wraith";
+  if(win){
+    if(G.dogs.includes("noel")&&G.dogs.includes("rudy"))return"both_dogs";
+    if(G.hp>=100)return"full_hp";
+    if(G.sanity>=100)return"full_sanity";
+    if(G.hp<10)return"low_hp";
+    if(G.items.includes("torch")&&G.items.includes("crucifix"))return"both_items";
+    if(G.items.includes("lantern"))return"lantern_win";
+    if(G.items.includes("journal"))return"journal_win";
+    const realItems=G.items.filter(i=>!["noel","rudy"].includes(i));
+    if(realItems.length>=8)return"collector";
+    if(Object.keys(G.visited).length>=ROOMS.length)return"explorer";
+    if(G.moves<=14)return"speed_run";
+    if(base==="slay_beast"&&G.moves<=5)return"speed_cellar";
+    if(realItems.length===1&&realItems[0]==="knife")return"knife_only";
+  }
+  return base;
+}
+
+function buildChoices(){
+  const r=rm(G.current);const ch=[];
+  if(r.dog&&!G.dogs.includes(r.dog)&&!G.items.includes(r.dog)){
+    const dn=r.dog==="noel"?"Noel":"Rudy";
+    ch.push({t:`Call ${dn} over — good boy!`,c:"btn-dog",a:()=>{
+      G.dogs.push(r.dog);G.items.push(r.dog);G.moves++;
+      const both=G.dogs.includes("noel")&&G.dogs.includes("rudy");
+      log(`${dn} joins you!${both?" Noel and Rudy immediately become best friends.":""}`,`le-dog`);
+      render();
+    }});
+  }
+  (G.ir[G.current]||[]).forEach(i=>ch.push({t:`Pick up ${ITEMS[i].n}`,c:"btn-green",a:()=>{
+    G.items.push(i);G.ir[G.current]=G.ir[G.current].filter(x=>x!==i);
+    log(`Found: ${ITEMS[i].n} — ${ITEMS[i].d}`,"le-good");G.moves++;render();
+  }}));
+  r.ex.forEach(ex=>{
+    const d=rm(ex);if(!d)return;
+    const boss=d.boss&&ex===G.boss;
+    ch.push({t:`Go to ${G.visited[ex]?d.n:"???"}${boss?" [MONSTER]":""}`,c:boss?"btn-danger":"",a:()=>moveTo(ex)});
+  });
+  if(r.esc){
+    ch.push({t:"Flee through the back door",c:"btn-green",a:()=>{
+      if(G.items.includes("noel")&&G.items.includes("rudy"))log("Noel and Rudy bound out into the night ahead of you.","le-dog");
+      else if(G.items.includes("noel"))log("Noel races out beside you. Good boy.","le-dog");
+      else if(G.items.includes("rudy"))log("Rudy trots out with you. Absolute unit.","le-dog");
+      endGame("flee");
+    }});
+    if(G.items.includes("rope"))ch.push({t:"Rope-climb the hidden window",c:"btn-purple",a:()=>endGame("rope_escape")});
+  }
+  if(r.boss&&G.current===G.boss){
+    const bk=G.current==="cellar"?"cellar":"attic";
+    const boss=BOSSES[bk];
+    const real=G.items.filter(i=>!["noel","rudy"].includes(i));
+    const hasN=G.items.includes("noel"),hasR=G.items.includes("rudy");
+    if(hasN&&hasR&&real.length===0)
+      ch.push({t:"Let Noel and Rudy handle this",c:"btn-dog",a:()=>{log("Noel and Rudy approach. The monster hesitates...","le-dog");endGame("monster_pet");}});
+    if(hasN&&G.dogs.includes("noel"))
+      ch.push({t:"Send Noel in!",c:"btn-dog",a:()=>{log("Noel charges with a bark that shakes the walls!","le-dog");endGame("noel_rescue");}});
+    if(hasR&&G.dogs.includes("rudy"))
+      ch.push({t:"Rudy — hold the line!",c:"btn-dog",a:()=>{log("Rudy plants himself between you and the monster.","le-dog");endGame("rudy_guardian");}});
+    boss.weak.forEach(w=>{if(G.items.includes(w))ch.push({t:`Use ${ITEMS[w].n} against ${boss.n}`,c:"btn-purple",a:()=>fightBoss(w)});});
+    if(real.length===0&&!hasN&&!hasR)
+      ch.push({t:"Fight bare-handed (no items!)",c:"btn-danger",a:()=>{log("You charge with nothing but desperation.","le-bad");endGame("no_items");}});
+    else ch.push({t:"Fight bare-handed",c:"btn-danger",a:()=>fightBoss(null)});
+    ch.push({t:"Run! Back the way you came",c:"",a:()=>moveTo(r.ex[0])});
+  }
+  if(G.items.includes("salt")&&!G.saltUsed)ch.push({t:"Pour a salt circle",c:"btn-green",a:()=>{
+    const inBoss=rm(G.current).boss&&G.current===G.boss;
+    G.saltUsed=1;G.sanity=Math.min(100,G.sanity+15);G.items=G.items.filter(i=>i!=="salt");
+    if(inBoss){endGame("salt_boss");return;}
+    log("You pour a salt circle. The air calms. (+15 sanity)","le-good");render();
+  }});
+  if(G.items.includes("vial"))ch.push({t:"Drink the vial",c:"btn-purple",a:()=>{
+    G.items=G.items.filter(i=>i!=="vial");
+    if(Math.random()<.5){G.hp=Math.min(100,G.hp+30);log("The liquid heals you. (+30 HP)","le-good");}
+    else{G.hp=Math.max(0,G.hp-20);log("Poison! (-20 HP)","le-bad");if(G.hp<=0){endGame("poison");return;}}
+    render();
+  }});
+  return ch;
+}
+
+function moveTo(dest){
+  const d=rm(dest);if(!d)return;
+  G.current=dest;G.moves++;
+  if(!G.visited[dest]){
+    G.visited[dest]=1;
+    if(d.ev&&d.ev.length)trigEv(d.ev[Math.floor(Math.random()*d.ev.length)]);
+    if(d.dog&&!G.dogs.includes(d.dog)){
+      const dn=d.dog==="noel"?"Noel":"Rudy";
+      log(`You hear a dog — ${dn} is in this room!`,"le-dog");
+    }
+  }
+  if(G.hp<=0)endGame("death_hp");
+  else if(G.sanity<=0){log("Your mind shatters.","le-bad");endGame("insanity");}
+  else render();
+}
+
+function fightBoss(weapon){
+  const bk=G.current==="cellar"?"cellar":"attic";
+  const boss=BOSSES[bk];G.moves++;
+  if(weapon&&boss.weak.includes(weapon)){
+    G.items=G.items.filter(i=>i!==weapon);log(boss.win,"le-good");
+    endGame(bk==="cellar"?"slay_beast":"slay_wraith");
+  } else {
+    const atk=boss.atk[Math.floor(Math.random()*boss.atk.length)];
+    if(G.items.includes("amulet")&&G.hp-atk.d<=0){
+      G.items=G.items.filter(i=>i!=="amulet");
+      log("The amulet SHATTERS — absorbed a fatal blow!","le-good");
+      G.sanity=Math.max(0,G.sanity-15);log(atk.t,"le-bad");
+      if(G.sanity<=0){endGame("insanity");return;}
+      endGame("amulet_used");return;
+    }
+    G.hp=Math.max(0,G.hp-atk.d);G.sanity=Math.max(0,G.sanity-15);
+    log(atk.t,"le-bad");
+    if(G.hp<=0){log(boss.lose,"le-bad");endGame("death_hp");}
+    else if(G.sanity<=0){log("Your mind breaks.","le-bad");endGame("insanity");}
+    else render();
+  }
+}
+
+function endGame(raw){
+  const skip=["noel_rescue","rudy_guardian","monster_pet","both_dogs","insanity","poison","death_hp","salt_boss","no_items","flee","rope_escape","amulet_used"];
+  const fid=skip.includes(raw)?raw:(checkSpecial(raw)||raw);
+  G.end=fid;SAVE.unlocked[fid]=1;save();
+  screen="ending";render();
+}
+
+function buildMap(){
+  return`<div class="mgrid">${ROOMS.map(r=>{
+    const v=G.visited[r.id],cur=G.current===r.id;
+    const dogHere=r.dog&&v&&!G.dogs.includes(r.dog);
+    const cls=cur?"cur":dogHere?"dog":v?"vis":r.safe?"saf":"unk";
+    return`<div class="${cls}" title="${v||cur?r.n+(dogHere?" — dog here!":""):"???"}">${cur?"[*]":r.ic}</div>`;
+  }).join("")}</div>`;
+}
+
+function renderMenu(){
+  const tot=ALL.length,unl=Object.keys(SAVE.unlocked).length,rem=tot-unl,pct=Math.round(unl/tot*100);
+  const filt=jf==="all"?ALL:ALL.filter(e=>e.cat===jf);
+  const cc={};ALL.forEach(e=>{cc[e.cat]=(cc[e.cat]||0)+1;});
+  const filters=`<div class="cfilter"><div class="cf ${jf==="all"?"cf-active":""}" onclick="jf='all';render()">All (${tot})</div>${CATS.map(c=>`<div class="cf ${jf===c.id?"cf-active":""}" onclick="jf='${c.id}';render()">${c.l}${cc[c.id]?" ("+cc[c.id]+")":""}</div>`).join("")}</div>`;
+  const rows=filt.map(e=>{
+    const got=SAVE.unlocked[e.id],cat=catS(e.cat),isDog=e.cat==="dog",isSec=e.cat==="secret"&&!got;
+    return`<div class="er">
+      <div class="${got?(isDog?"ei ei-dog":"ei"):"ei ei-lock"}">${got?e.i:"?"}</div>
+      <div style="flex:1;min-width:0">
+        <div class="${got?(isDog?"en en-dog":"en"):"en en-lock"}">${isSec?"???":e.l}</div>
+        <div class="${got?"ed":"ed ed-lock"}">${got?e.cond:isSec?"Keep exploring...":e.cond}</div>
+      </div>
+      <span class="${got?(isDog?"eb eb-dog":"eb"):"eb eb-lock"}">${got?"found":"locked"}</span>
+    </div>`;
+  }).join("");
+  return`<div class="title">Manor of Dread</div>
+  <div class="subtitle">a haunted survival game &mdash; ${tot} endings</div>
+  <div class="dogline">featuring Noel <span class="wag">~</span> and Rudy <span class="wag" style="animation-delay:.2s">~</span></div>
+  <button class="btn btn-prim" onclick="newGame()">Enter the manor</button>
+  ${SAVE.runs>0?`<p style="font-size:11px;color:#7a6a50;margin-bottom:10px">total runs: ${SAVE.runs}</p>`:""}
+  <div class="dc">
+    <div class="rl">endings discovered</div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0 2px"><span style="font-size:22px;font-weight:bold;color:#EF9F27">${unl}</span><span style="font-size:13px;color:#7a6a50">/ ${tot}</span><span style="font-size:12px;color:#7a6a50;margin-left:auto">${pct}%</span></div>
+    <div class="pw"><div class="pi" style="width:${pct}%"></div></div>
+    <div style="font-size:12px;color:#7a6a50;margin-top:6px">${rem>0?`${rem} ending${rem>1?"s":""} still to find.`:"All endings found. The manor has no more secrets."}</div>
+  </div>
+  <div class="dc">
+    <div class="rl" style="margin-bottom:8px">ending journal</div>
+    ${!ready?`<div style="font-size:13px;color:#7a6a50;padding:8px 0"><span class="spin"></span>Generating more endings from the dark...</div>`:filters}
+    <div class="jscroll">${rows}</div>
+  </div>`;
+}
+
+function renderEnding(){
+  const e=ALL.find(x=>x.id===G.end)||{l:"Unknown Fate",cat:"death",i:"?",desc:"Something went wrong.",cond:""};
+  const cat=catS(e.cat),tot=ALL.length,unl=Object.keys(SAVE.unlocked).length;
+  return`<div class="ecard" style="background:${cat.bg};border:1px solid ${cat.b}">
+    <span class="catb" style="background:${cat.bg};border:1px solid ${cat.b};color:${cat.c}">${cat.l}</span>
+    <div style="font-size:18px;font-weight:bold;color:${cat.c};margin-bottom:8px">${e.l}</div>
+    <div style="font-size:13px;line-height:1.9;color:#c8b89a">${e.desc}</div>
+    ${G.dogs.length?`<div style="margin-top:10px;font-size:12px;color:#378ADD">${G.dogs.map(d=>d==="noel"?"Noel made it out. Good boy.":"Rudy made it out. Absolute unit.").join(" ")}</div>`:""}
+    <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap">
+      <div><div class="sl">health</div><div style="font-size:15px;font-weight:bold;color:#e8d8b8">${Math.round(G.hp)}%</div></div>
+      <div><div class="sl">sanity</div><div style="font-size:15px;font-weight:bold;color:#e8d8b8">${Math.round(G.sanity)}%</div></div>
+      <div><div class="sl">moves</div><div style="font-size:15px;font-weight:bold;color:#e8d8b8">${G.moves}</div></div>
+    </div>
+  </div>
+  <div class="dc">
+    <div class="rl">collection progress</div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0 2px"><span style="font-size:20px;font-weight:bold;color:#EF9F27">${unl}</span><span style="font-size:13px;color:#7a6a50">/ ${tot}</span><span style="font-size:12px;color:#7a6a50;margin-left:auto">${Math.round(unl/tot*100)}%</span></div>
+    <div class="pw"><div class="pi" style="width:${Math.round(unl/tot*100)}%"></div></div>
+    <div style="font-size:12px;color:#7a6a50;margin-top:6px">${tot-unl>0?`${tot-unl} ending${tot-unl>1?"s":""} left to find.`:"All endings found!"}</div>
+  </div>
+  <div class="choices">
+    <button class="btn" onclick="newGame()">Play again</button>
+    <button class="btn btn-green" onclick="screen='menu';render()">View journal</button>
+  </div>`;
+}
+
+function render(){
+  const el=document.getElementById("main");
+  if(screen==="menu"){el.innerHTML=renderMenu();return;}
+  if(screen==="ending"){el.innerHTML=renderEnding();return;}
+  const r=rm(G.current),ch=buildChoices();
+  const isBoss=r.boss&&G.current===G.boss;
+  const boss=isBoss?(G.current==="cellar"?BOSSES.cellar:BOSSES.attic):null;
+  const noelHere=r.dog==="noel"&&!G.dogs.includes("noel");
+  const rudyHere=r.dog==="rudy"&&!G.dogs.includes("rudy");
+  el.innerHTML=`
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+  <span style="font-size:11px;color:#7a6a50;text-transform:uppercase;letter-spacing:.06em">manor of dread</span>
+  <button class="btn" style="width:auto;padding:4px 12px;font-size:11px" onclick="screen='menu';render()">menu</button>
+</div>
+<div class="dc">
+  <div class="rl">current room</div>
+  <div style="font-size:15px;font-weight:bold;color:#EF9F27;margin-bottom:4px">${r.n}</div>
+  ${isBoss?`<div style="font-size:12px;color:#E24B4A;margin-bottom:6px;font-weight:bold">— ${boss.n} is here —</div>`:""}
+  ${noelHere?`<div class="dogbanner">A golden retriever watches you from under the cot, tail thumping the floorboards. <span class="wag">~</span></div>`:""}
+  ${rudyHere?`<div class="dogbanner">A scruffy terrier stands in the shadows, growling softly at something only it can sense. <span class="wag">~</span></div>`:""}
+  <div style="font-size:13px;line-height:1.85;color:#c8b89a;margin-bottom:8px">${isBoss?`<span style="color:#F09595">${boss.desc}</span><br><br>`:""}${r.desc}</div>
+  ${G.clue?`<div style="background:#0a0810;border:1px solid #3a2a60;border-radius:6px;padding:8px 12px;font-size:12px;color:#AFA9EC;font-style:italic">Clue: The circled room on the map — something important is hidden there.</div>`:""}
+</div>
+<div class="sbar">
+  <div class="sb"><div class="sl">health</div><div class="sv">${Math.round(G.hp)}%</div><div class="bw"><div class="bf" style="width:${G.hp}%;background:${hpC()}"></div></div></div>
+  <div class="sb"><div class="sl">sanity</div><div class="sv">${Math.round(G.sanity)}%</div><div class="bw"><div class="bf" style="width:${G.sanity}%;background:${snC()}"></div></div></div>
+  <div class="sb"><div class="sl">moves</div><div class="sv">${G.moves}</div></div>
+</div>
+<div style="margin-bottom:8px;min-height:22px">${G.items.map(i=>`<span class="tag ${ITEMS[i]?.t||""}" title="${ITEMS[i]?.d||""}">${ITEMS[i]?.n||i}</span>`).join("")||`<span style="font-size:11px;color:#3a2a10">no items</span>`}</div>
+<div class="rl" style="margin-bottom:4px">map <span style="color:#185FA5;font-size:9px">— blue = dog nearby</span></div>
+${buildMap()}
+<div class="choices">${ch.map((c,i)=>`<button class="btn ${c.c||""}" onclick="C(${i})">${c.t}</button>`).join("")}</div>
+<div class="log">${G.log.map(e=>`<div class="le ${e.cls||""}">${e.msg}</div>`).join("")}</div>`;
+  window._ch=ch;
+}
+
+window.C=i=>{const c=window._ch[i];if(c)c.a();};
+genEndings();
+render();
+</script>
+</body>
+</html>
